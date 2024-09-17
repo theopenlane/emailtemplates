@@ -5,7 +5,7 @@
 
 {{ define "content" }}
 <div class="content">
-  <p>Huzzah {{ .FirstName }}!!</p>
+  <p>Huzzah {{ .Recipient.FirstName }}!!</p>
 
   <p>
     Welcome to the {{ .CompanyName }} platform - you can now log in to your account
@@ -17,7 +17,7 @@
   <p>
     We've created a personal Organization just for you to help you get started - you can create additional Organizations
     for your businesses, or just jump right in to see all the amazing features we've cooked up for you.
-    {{-if .DocsDomain }}
+    {{- if .DocsDomain }}
     Check out the
     <a href="{{ .DocsDomain }}/getting-started">starter guide</a> for more
     information or our <a href="{{ .DocsDomain }}/examples">end-to-end examples</a>
