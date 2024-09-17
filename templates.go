@@ -32,7 +32,7 @@ type Config struct {
 
 // URLConfig includes urls that are used in the email templates
 type URLConfig struct {
-	VerifyURL           string `koanf:"verifyURL" json:"verifyURL" default:"https://console.theopenlane.io/verify"`
+	VerifyURL           string `koanf:"verifyURL" json:"verifyURL" default:"https://console.theopenlane.io/verify?token=%s"`
 	InviteURL           string `koanf:"inviteURL" json:"inviteURL" default:"https://console.theopenlane.io/invite"`
 	ResetURL            string `koanf:"resetURL" json:"resetURL" default:"https://console.theopenlane.io/password-reset"`
 	VerifySubscriberURL string `koanf:"verifySubscriberURL" json:"verifySubscriberURL" default:"https://theopenlane.io/subscribe"`
