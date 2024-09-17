@@ -69,7 +69,7 @@ func TestVerify(t *testing.T) {
 		},
 	}
 
-	email, err := Verify(data)
+	email, err := verify(data)
 	require.NoError(t, err)
 	require.NotNil(t, email)
 
@@ -90,7 +90,7 @@ func TestWelcome(t *testing.T) {
 		Organization: "Test Org",
 	}
 
-	email, err := Welcome(data)
+	email, err := welcome(data)
 	require.NoError(t, err)
 	require.NotNil(t, email)
 
@@ -113,7 +113,7 @@ func TestInvite(t *testing.T) {
 		Role:             "Admin",
 	}
 
-	email, err := Invite(data)
+	email, err := invite(data)
 	require.NoError(t, err)
 	require.NotNil(t, email)
 
@@ -133,7 +133,7 @@ func TestInviteAccepted(t *testing.T) {
 		},
 	}
 
-	email, err := InviteAccepted(data)
+	email, err := inviteAccepted(data)
 	require.NoError(t, err)
 	require.NotNil(t, email)
 
@@ -153,7 +153,7 @@ func TestPasswordResetRequest(t *testing.T) {
 		},
 	}
 
-	email, err := PasswordResetRequest(data)
+	email, err := passwordResetRequest(data)
 	require.NoError(t, err)
 	require.NotNil(t, email)
 
@@ -173,9 +173,30 @@ func TestPasswordResetSuccess(t *testing.T) {
 		},
 	}
 
-	email, err := PasswordResetSuccess(data)
+	email, err := passwordResetSuccess(data)
 	require.NoError(t, err)
 	require.NotNil(t, email)
 
 	assert.Equal(t, "Test Company Password Reset Confirmation", email.Subject)
+}
+
+func TestSubscribe(t *testing.T) {
+	data := SubscriberEmailData{
+		EmailData: EmailData{
+			Subject: "Subscribe",
+			Recipient: Recipient{
+				Email: "test@example.com",
+			},
+			Config: Config{
+				CompanyName: "Test Company",
+			},
+		},
+		OrganizationName: "Test Org",
+	}
+
+	email, err := subscribe(data)
+	require.NoError(t, err)
+	require.NotNil(t, email)
+
+	assert.Equal(t, "You've been subscribed to Test Company", email.Subject)
 }

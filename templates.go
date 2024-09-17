@@ -8,13 +8,13 @@ import (
 
 // Email subject lines
 const (
-	WelcomeSubject              = "Welcome to %s!"
-	VerifyEmailSubject          = "Please verify your email address to login to %s"
-	InviteSubject               = "Join Your Teammate %s on %s!"
-	PasswordResetRequestSubject = "%s Password Reset - Action Required"
-	PasswordResetSuccessSubject = "%s Password Reset Confirmation"
-	InviteAcceptedSubject       = "You've been added to an Organization on %s"
-	SubscribedSubject           = "You've been subscribed to %s"
+	welcomeSubject              = "Welcome to %s!"
+	verifyEmailSubject          = "Please verify your email address to login to %s"
+	inviteSubject               = "Join Your Teammate %s on %s!"
+	passwordResetRequestSubject = "%s Password Reset - Action Required"
+	passwordResetSuccessSubject = "%s Password Reset Confirmation"
+	inviteAcceptedSubject       = "You've been added to an Organization on %s"
+	subscribedSubject           = "You've been subscribed to %s"
 )
 
 // Config includes fields that are common to all the email builders that are configurable
@@ -110,74 +110,86 @@ func (e EmailData) Validate() error {
 	return nil
 }
 
-// Verify creates a new email to verify an email address
-func Verify(data VerifyEmailData) (*newman.EmailMessage, error) {
+// verify creates a new email to verify an email address
+func verify(data VerifyEmailData) (*newman.EmailMessage, error) {
 	text, html, err := Render("verify_email", data)
 	if err != nil {
 		return nil, err
 	}
 
-	data.Subject = fmt.Sprintf(VerifyEmailSubject, data.CompanyName)
+	data.Subject = fmt.Sprintf(verifyEmailSubject, data.CompanyName)
 
 	return data.Build(text, html)
 }
 
-// Welcome creates a new email to welcome a new user
-func Welcome(data WelcomeData) (*newman.EmailMessage, error) {
+// welcome creates a new email to welcome a new user
+func welcome(data WelcomeData) (*newman.EmailMessage, error) {
 	text, html, err := Render("welcome", data)
 	if err != nil {
 		return nil, err
 	}
 
-	data.Subject = fmt.Sprintf(WelcomeSubject, data.CompanyName)
+	data.Subject = fmt.Sprintf(welcomeSubject, data.CompanyName)
 
 	return data.Build(text, html)
 }
 
-// Invite creates a new email to invite a user to an organization
-func Invite(data InviteData) (*newman.EmailMessage, error) {
+// invite creates a new email to invite a user to an organization
+func invite(data InviteData) (*newman.EmailMessage, error) {
 	text, html, err := Render("invite", data)
 	if err != nil {
 		return nil, err
 	}
 
-	data.Subject = fmt.Sprintf(InviteSubject, data.InviterName, data.CompanyName)
+	data.Subject = fmt.Sprintf(inviteSubject, data.InviterName, data.CompanyName)
 
 	return data.Build(text, html)
 }
 
-// InviteAccepted creates a new email to notify a user that their invite has been accepted
-func InviteAccepted(data InviteData) (*newman.EmailMessage, error) {
+// inviteAccepted creates a new email to notify a user that their invite has been accepted
+func inviteAccepted(data InviteData) (*newman.EmailMessage, error) {
 	text, html, err := Render("invite_joined", data)
 	if err != nil {
 		return nil, err
 	}
 
-	data.Subject = fmt.Sprintf(InviteAcceptedSubject, data.CompanyName)
+	data.Subject = fmt.Sprintf(inviteAcceptedSubject, data.CompanyName)
 
 	return data.Build(text, html)
 }
 
-// PasswordResetRequest creates a new email to request a password reset
-func PasswordResetRequest(data ResetRequestData) (*newman.EmailMessage, error) {
+// passwordResetRequest creates a new email to request a password reset
+func passwordResetRequest(data ResetRequestData) (*newman.EmailMessage, error) {
 	text, html, err := Render("password_reset_request", data)
 	if err != nil {
 		return nil, err
 	}
 
-	data.Subject = fmt.Sprintf(PasswordResetRequestSubject, data.CompanyName)
+	data.Subject = fmt.Sprintf(passwordResetRequestSubject, data.CompanyName)
 
 	return data.Build(text, html)
 }
 
-// PasswordResetSuccess creates a new email to confirm a password reset
-func PasswordResetSuccess(data ResetSuccessData) (*newman.EmailMessage, error) {
+// passwordResetSuccess creates a new email to confirm a password reset
+func passwordResetSuccess(data ResetSuccessData) (*newman.EmailMessage, error) {
 	text, html, err := Render("password_reset_success", data)
 	if err != nil {
 		return nil, err
 	}
 
-	data.Subject = fmt.Sprintf(PasswordResetSuccessSubject, data.CompanyName)
+	data.Subject = fmt.Sprintf(passwordResetSuccessSubject, data.CompanyName)
+
+	return data.Build(text, html)
+}
+
+// subscribe creates a new email to confirm a subscription
+func subscribe(data SubscriberEmailData) (*newman.EmailMessage, error) {
+	text, html, err := Render("subscribe", data)
+	if err != nil {
+		return nil, err
+	}
+
+	data.Subject = fmt.Sprintf(subscribedSubject, data.CompanyName)
 
 	return data.Build(text, html)
 }
