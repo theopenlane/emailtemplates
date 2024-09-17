@@ -1,6 +1,6 @@
 # Email Templates
 
-This directory contains some of the common emails which would be sent to users
+This repository contains some of the common emails which would be sent to users
 of the platform.
 
 ## Required Variables For All Templates
