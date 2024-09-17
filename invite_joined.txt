@@ -4,4 +4,4 @@ You have been successfully added to organization {{ .OrgName }}, login and start
 
 Thank you,
 
-The Openlane Team
+The {{ .CompanyName }} Team

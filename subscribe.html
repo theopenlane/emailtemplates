@@ -1,7 +1,7 @@
 {{ template "base.html" . }}
 
 {{ define "title" }}Thank you for subscribing{{ end }}
-{{ define "preheader" }}Please verify your email to complete the Openlane subscription process{{ end }}
+{{ define "preheader" }}Please verify your email to complete the {{ .CompanyName }} subscription process{{ end }}
 
 {{ define "content" }}
 <div class="content">
@@ -25,6 +25,6 @@
     <a href="mailto:{{ .SupportEmail }}">{{ .SupportEmail }}</a>.
   <p>
 
-  <p><br />The Openlane Team<br /></p>
+  <p><br />The {{ .CompanyName }} Team<br /></p>
 </div>
 {{ end }}

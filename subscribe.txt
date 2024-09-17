@@ -5,4 +5,4 @@ Thank you for subscribing to {{ .OrgName }} - in order to confirm the subscripti
 If you are having trouble verifying your email address, please contact us at {{ .SupportEmail }}.
 
 Thank you,
-The The Openlane Team
+The The {{ .CompanyName }} Team

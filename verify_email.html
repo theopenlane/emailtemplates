@@ -1,14 +1,14 @@
 {{ template "base.html" . }}
 
 {{ define "title" }}Verify your email address{{ end }}
-{{ define "preheader" }}Please verify your email to complete the Openlane registration process{{ end }}
+{{ define "preheader" }}Please verify your email to complete the {{ .CompanyName }} registration process{{ end }}
 
 {{ define "content" }}
 <div class="content">
-  <p>Welcome to Openlane, {{ .Recipient.FirstName }},</p>
+  <p>Welcome to {{ .CompanyName }}, {{ .Recipient.FirstName }},</p>
 
   <p>
-    Thank you for registering for the Openlane platform - in order to ensure the
+    Thank you for registering for the {{ .CompanyName }} platform - in order to ensure the
     security of your account, please verify your email address by clicking the button
     below, or copy and paste the linked URL into your browser:
   </p>
@@ -27,6 +27,6 @@
     <a href="mailto:{{ .SupportEmail }}">{{ .SupportEmail }}</a>.
   <p>
 
-  <p><br />The Openlane Team<br /></p>
+  <p><br />The {{ .CompanyName }} Team<br /></p>
 </div>
 {{ end }}
