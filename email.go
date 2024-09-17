@@ -18,7 +18,7 @@ func (c Config) NewVerifyEmail(r Recipient, token string) (*newman.EmailMessage,
 
 	var err error
 
-	data.VerifyURL, err = addTokenToURL(c.VerifyURL, token)
+	data.URLS.Verify, err = addTokenToURL(c.URLS.Verify, token)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c Config) NewInviteEmail(r Recipient, inviterName, org, role, token string
 
 	var err error
 
-	data.InviteURL, err = addTokenToURL(c.InviteURL, token)
+	data.URLS.Invite, err = addTokenToURL(c.URLS.Invite, token)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (c Config) NewPasswordResetRequestEmail(r Recipient, token string) (*newman
 
 	var err error
 
-	data.ResetURL, err = addTokenToURL(c.ResetURL, token)
+	data.URLS.PasswordReset, err = addTokenToURL(c.URLS.PasswordReset, token)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,7 @@ func (c Config) NewSubscriberEmail(r Recipient, org, token string) (*newman.Emai
 
 	var err error
 
-	data.VerifySubscriberURL, err = addTokenToURL(c.VerifySubscriberURL, token)
+	data.URLS.VerifySubscriber, err = addTokenToURL(c.URLS.VerifySubscriber, token)
 	if err != nil {
 		return nil, err
 	}

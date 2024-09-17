@@ -1,8 +1,8 @@
-Hello {{ .Recipient.FirstName }},
+Hello {{ .Recipient.FirstName | ToUpper }},
 
 Thank you for registering for the {{ .CompanyName }} platform - in order to ensure the security of your account, please verify your email address by clicking the button below, or copy and paste the linked URL into your browser:
 
-{{ .VerifyURL }}
+{{ .URLS.Verify }}
 
 If you are having trouble verifying your email address, please contact us at {{ .SupportEmail }}.
 

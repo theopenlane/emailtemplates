@@ -11,18 +11,18 @@ of the platform.
 | `.CompanyAddress` | `1337 Main St. &middot;Metropolis, NY 10010` |
 | `.Corporation`    | `theopenlane, Inc.`                          |
 | `.SupportEmail`   | `support@theopenlane.io`                     |
-| `.RootDomain`     | `https://theopenlane.io`                     |
-| `.ProductDomain`  | `https://console.theopenlane.io`             |
-| `.DocsDomain`     | `https://docs.theopenlane.io`                |
+| `.URLS.Root`      | `https://theopenlane.io`                     |
+| `.URLS.Product`   | `https://console.theopenlane.io`             |
+| `.URLS.Docs`      | `https://docs.theopenlane.io`                |
 
 ## Additional Variables for Specific Templates
 
-| Template Name           | Variable               | Example Value                                   |
-| ----------------------- | ---------------------- | ----------------------------------------------- |
-| Email Verification      | `.VerifyURL`           | `https://console.theopenlane.io/verify`         |
-| Subscriber Verification | `.VerifySubscriberURL` | `https://theopenlane.io/verify`                 |
-| Password Reset          | `.ResetURL`            | `https://console.theopenlane.io/password-reset` |
-| Invite Acceptance       | `.InviteURL`           | `https://console.theopenlane.io/invite`         |
+| Template Name           | Variable                 | Example Value                                   |
+| ----------------------- | ------------------------ | ----------------------------------------------- |
+| Email Verification      | `.URLS.Verify`           | `https://console.theopenlane.io/verify`         |
+| Subscriber Verification | `.URLS.VerifySubscriber` | `https://theopenlane.io/verify`                 |
+| Password Reset          | `.URLS.PasswordReset`    | `https://console.theopenlane.io/password-reset` |
+| Invite Acceptance       | `.URLS.Invite`           | `https://console.theopenlane.io/invite`         |
 
 ## Editing
 

@@ -40,21 +40,21 @@ func WithCorporation(corp string) Option {
 // WithRootDomain sets the root domain for the email
 func WithRootDomain(domain string) Option {
 	return func(t *Config) {
-		t.RootDomain = domain
+		t.URLS.Root = domain
 	}
 }
 
 // WithProductDomain sets the product domain for the email
 func WithProductDomain(domain string) Option {
 	return func(t *Config) {
-		t.ProductDomain = domain
+		t.URLS.Product = domain
 	}
 }
 
 // WithDocsDomain sets the docs domain for the email
 func WithDocsDomain(domain string) Option {
 	return func(t *Config) {
-		t.DocsDomain = domain
+		t.URLS.Docs = domain
 	}
 }
 
@@ -68,27 +68,27 @@ func WithFromEmail(email string) Option {
 // WithVerifyURL sets the verify URL for the email
 func WithVerifyURL(url string) Option {
 	return func(t *Config) {
-		t.VerifyURL = url
+		t.URLS.Verify = url
 	}
 }
 
 // WithInviteURL sets the invite URL for the email
 func WithInviteURL(url string) Option {
 	return func(t *Config) {
-		t.InviteURL = url
+		t.URLS.Invite = url
 	}
 }
 
 // WithResetURL sets the reset URL for the email
 func WithResetURL(url string) Option {
 	return func(t *Config) {
-		t.ResetURL = url
+		t.URLS.PasswordReset = url
 	}
 }
 
 // WithVerifySubscriberURL sets the verify subscriber URL for the email
 func WithVerifySubscriberURL(url string) Option {
 	return func(t *Config) {
-		t.VerifySubscriberURL = url
+		t.URLS.VerifySubscriber = url
 	}
 }

@@ -19,23 +19,24 @@ const (
 
 // Config includes fields that are common to all the email builders that are configurable
 type Config struct {
-	CompanyName    string `koanf:"companyName" json:"companyName" default:""`
-	CompanyAddress string `koanf:"companyAddress" json:"companyAddress" default:""`
-	Corporation    string `koanf:"corporation" json:"corporation" default:""`
-	RootDomain     string `koanf:"rootDomain" json:"rootDomain" default:""`
-	ProductDomain  string `koanf:"productDomain" json:"productDomain" default:""`
-	DocsDomain     string `koanf:"docsDomain" json:"docsDomain" default:""`
-	FromEmail      string `koanf:"fromEmail" json:"fromEmail" default:""`
-	SupportEmail   string `koanf:"supportEmail" json:"supportEmail" default:""`
-	URLConfig
+	CompanyName    string    `koanf:"companyName" json:"companyName" default:""`
+	CompanyAddress string    `koanf:"companyAddress" json:"companyAddress" default:""`
+	Corporation    string    `koanf:"corporation" json:"corporation" default:""`
+	FromEmail      string    `koanf:"fromEmail" json:"fromEmail" default:""`
+	SupportEmail   string    `koanf:"supportEmail" json:"supportEmail" default:""`
+	LogoURL        string    `koanf:"logoURL" json:"logoURL" default:""`
+	URLS           URLConfig `koanf:"urls" json:"urls"`
 }
 
 // URLConfig includes urls that are used in the email templates
 type URLConfig struct {
-	VerifyURL           string `koanf:"verifyURL" json:"verifyURL" default:""`
-	InviteURL           string `koanf:"inviteURL" json:"inviteURL" default:""`
-	ResetURL            string `koanf:"resetURL" json:"resetURL" default:""`
-	VerifySubscriberURL string `koanf:"verifySubscriberURL" json:"verifySubscriberURL" default:""`
+	Root             string `koanf:"root" json:"root" default:""`
+	Product          string `koanf:"product" json:"product" default:""`
+	Docs             string `koanf:"docs" json:"docs" default:""`
+	Verify           string `koanf:"verify" json:"verify" default:""`
+	Invite           string `koanf:"invite" json:"invite" default:""`
+	PasswordReset    string `koanf:"reset" json:"reset" default:""`
+	VerifySubscriber string `koanf:"verifySubscriber" json:"verifySubscriber" default:""`
 }
 
 // EmailData includes data fields that are common to all the email builders

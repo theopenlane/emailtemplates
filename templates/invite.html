@@ -9,6 +9,10 @@
 </div>
 
 <div class="content">
+  {{- if .LogoURL }}
+  <img src="{{ .LogoURL }}" alt="{{ .CompanyName }}" style="width: 100px; height: auto;" />
+  {{- end }}
+
   <p>{{ .InviterName }} has invited you to use {{ .CompanyName }} with them, in an Organization called {{ .OrganizationName }} with
     role of {{
     .Role }}</p>
@@ -18,14 +22,14 @@
   <table border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td align="center" class="button">
-        <a rel="noopener" target="_blank" href="{{ .InviteURL }}">Join Now</a>
+        <a rel="noopener" target="_blank" href="{{ .URLS.Invite }}">Join Now</a>
       </td>
     </tr>
   </table>
 
   <p>Or you can copy and paste the following URL into your browser:</p>
 
-  <p><a rel="noopener" target="_blank" href="{{ .InviteURL }}">{{ .InviteURL }}</a>
+  <p><a rel="noopener" target="_blank" href="{{ .URLS.Invite }}">{{ .URLS.Invite }}</a>
 
   <p>If you have any questions, please contact <a href="mailto:{{ .SupportEmail }}">{{ .SupportEmail }}/a>.</p>
 

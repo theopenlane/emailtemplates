@@ -5,7 +5,11 @@
 
 {{ define "content" }}
 <div class="content">
-  <p>Welcome to {{ .CompanyName }}, {{ .Recipient.FirstName }},</p>
+  {{- if .LogoURL }}
+  <img src="{{ .LogoURL }}" alt="{{ .CompanyName }}" style="width: 100px; height: auto;" />
+  {{- end }}
+
+  <p>Welcome to {{ .CompanyName }}, {{ .Recipient.FirstName | ToUpper }},</p>
 
   <p>
     Thank you for registering for the {{ .CompanyName }} platform - in order to ensure the
@@ -16,12 +20,12 @@
   <table border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td align="center" class="button">
-        <a rel="noopener" target="_blank" href="{{ .VerifyURL }}">Verify Email</a>
+        <a rel="noopener" target="_blank" href="{{ .URLS.Verify }}">Verify Email</a>
       </td>
     </tr>
   </table>
 
-  <p><a href="{{ .VerifyURL }}">{{ .VerifyURL }}</a></p>
+  <p><a href="{{ .URLS.Verify }}">{{ .URLS.Verify }}</a></p>
 
   <p>If you are having trouble verifying your email address, please contact us at
     <a href="mailto:{{ .SupportEmail }}">{{ .SupportEmail }}</a>.

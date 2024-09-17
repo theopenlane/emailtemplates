@@ -5,11 +5,15 @@
 
 {{ define "content" }}
 <div class="content">
-  <p>Huzzah {{ .Recipient.FirstName }}!!</p>
+  {{- if .LogoURL }}
+  <img src="{{ .LogoURL }}" alt="{{ .CompanyName }}" style="width: 100px; height: auto;" />
+  {{- end }}
+
+  <p>Huzzah {{ .Recipient.FirstName | ToUpper }}!!</p>
 
   <p>
     Welcome to the {{ .CompanyName }} platform - you can now log in to your account
-    <a href="{{ .ProductDomain }}">here</a>
+    <a href="{{ .URLS.Product }}">here</a>
   </p>
 
   <h2>What Next?</h2>
@@ -17,10 +21,10 @@
   <p>
     We've created a personal Organization just for you to help you get started - you can create additional Organizations
     for your businesses, or just jump right in to see all the amazing features we've cooked up for you.
-    {{- if .DocsDomain }}
+    {{- if .URLS.Docs }}
     Check out the
-    <a href="{{ .DocsDomain }}/getting-started">starter guide</a> for more
-    information or our <a href="{{ .DocsDomain }}/examples">end-to-end examples</a>
+    <a href="{{ .URLS.Docs }}/getting-started">starter guide</a> for more
+    information or our <a href="{{ .URLS.Docs }}/examples">end-to-end examples</a>
     for ideas and inspiration.
     {{- end }}
   </p>

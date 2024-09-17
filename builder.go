@@ -9,6 +9,7 @@ import (
 	"text/template"
 
 	"github.com/rs/zerolog/log"
+	"github.com/stoewer/go-strcase"
 )
 
 const (
@@ -49,7 +50,17 @@ func init() {
 			patterns = append(patterns, filepath.Join(templatesDir, partialsDir, "*.html"))
 		}
 
-		templates[file.Name()] = template.Must(template.ParseFS(files, patterns...))
+		// function map for template
+		fm := template.FuncMap{
+			"ToUpper": strcase.UpperCamelCase,
+		}
+
+		var err error
+		templates[file.Name()], err = template.New(file.Name()).Funcs(fm).ParseFS(files, patterns...)
+
+		if err != nil {
+			log.Panic().Err(err).Str("template", file.Name()).Msg("could not parse template")
+		}
 	}
 }
 
