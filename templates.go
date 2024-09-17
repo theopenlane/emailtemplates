@@ -19,23 +19,23 @@ const (
 
 // Config includes fields that are common to all the email builders that are configurable
 type Config struct {
-	CompanyName    string `koanf:"companyName" json:"companyName" default:"Openlane"`
-	CompanyAddress string `koanf:"companyAddress" json:"companyAddress" default:"5150 Broadway St &middot; San Antonio, TX 78209"`
-	Corporation    string `koanf:"corporation" json:"corporation" default:"theopenlane, Inc."`
-	RootDomain     string `koanf:"rootDomain" json:"rootDomain" default:"https://theopenlane.io"`
-	ProductDomain  string `koanf:"productDomain" json:"productDomain" default:"https://console.theopenlane.io"`
-	DocsDomain     string `koanf:"docsDomain" json:"docsDomain" default:"https://docs.theopenlane.io"`
-	FromEmail      string `koanf:"fromEmail" json:"fromEmail" default:"no-reply@mail.theopenlane.io"`
-	SupportEmail   string `koanf:"supportEmail" json:"supportEmail" default:"support@theopenlane.io"`
+	CompanyName    string `koanf:"companyName" json:"companyName" default:""`
+	CompanyAddress string `koanf:"companyAddress" json:"companyAddress" default:""`
+	Corporation    string `koanf:"corporation" json:"corporation" default:""`
+	RootDomain     string `koanf:"rootDomain" json:"rootDomain" default:""`
+	ProductDomain  string `koanf:"productDomain" json:"productDomain" default:""`
+	DocsDomain     string `koanf:"docsDomain" json:"docsDomain" default:""`
+	FromEmail      string `koanf:"fromEmail" json:"fromEmail" default:""`
+	SupportEmail   string `koanf:"supportEmail" json:"supportEmail" default:""`
 	URLConfig
 }
 
 // URLConfig includes urls that are used in the email templates
 type URLConfig struct {
-	VerifyURL           string `koanf:"verifyURL" json:"verifyURL" default:"https://console.theopenlane.io/verify?token=%s"`
-	InviteURL           string `koanf:"inviteURL" json:"inviteURL" default:"https://console.theopenlane.io/invite"`
-	ResetURL            string `koanf:"resetURL" json:"resetURL" default:"https://console.theopenlane.io/password-reset"`
-	VerifySubscriberURL string `koanf:"verifySubscriberURL" json:"verifySubscriberURL" default:"https://theopenlane.io/subscribe"`
+	VerifyURL           string `koanf:"verifyURL" json:"verifyURL" default:""`
+	InviteURL           string `koanf:"inviteURL" json:"inviteURL" default:""`
+	ResetURL            string `koanf:"resetURL" json:"resetURL" default:""`
+	VerifySubscriberURL string `koanf:"verifySubscriberURL" json:"verifySubscriberURL" default:""`
 }
 
 // EmailData includes data fields that are common to all the email builders
