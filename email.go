@@ -2,7 +2,7 @@ package emailtemplates
 
 import "github.com/theopenlane/newman"
 
-// NewVerifyEmail returns a new VerifyEmailData with default values for use at Openlane
+// NewVerifyEmail returns a new email message based on the config values
 func (c Config) NewVerifyEmail(r Recipient) (*newman.EmailMessage, error) {
 	data := VerifyEmailData{
 		EmailData: EmailData{
@@ -15,7 +15,7 @@ func (c Config) NewVerifyEmail(r Recipient) (*newman.EmailMessage, error) {
 	return verify(data)
 }
 
-// NewWelcomeEmail returns a new WelcomeData with default values for use at Openlane
+// NewWelcomeEmail returns a new email message based on the config values
 func (c Config) NewWelcomeEmail(r Recipient, org string) (*newman.EmailMessage, error) {
 	data := WelcomeData{
 		EmailData: EmailData{
@@ -29,8 +29,22 @@ func (c Config) NewWelcomeEmail(r Recipient, org string) (*newman.EmailMessage, 
 	return welcome(data)
 }
 
-// NewInviteEmail returns a new InviteData with default values for use at Openlane
+// NewInviteEmail returns a new email message based on the config values
 func (c Config) NewInviteEmail(r Recipient, inviterName string, org string, role string) (*newman.EmailMessage, error) {
+	data := c.newInvite(r, inviterName, org, role)
+
+	return invite(data)
+}
+
+// NewInviteEmail returns a new email message based on the config values
+func (c Config) NewInviteAcceptedEmail(r Recipient, inviterName string, org string, role string) (*newman.EmailMessage, error) {
+	data := c.newInvite(r, inviterName, org, role)
+
+	return inviteAccepted(data)
+}
+
+// newInvite creates new invite data for use in the invite emails
+func (c Config) newInvite(r Recipient, inviterName string, org string, role string) InviteData {
 	data := InviteData{
 		EmailData: EmailData{
 			Config: c,
@@ -42,10 +56,10 @@ func (c Config) NewInviteEmail(r Recipient, inviterName string, org string, role
 	data.OrganizationName = org
 	data.Role = role
 
-	return invite(data)
+	return data
 }
 
-// NewPasswordResetRequestEmail returns a new ResetRequestData with default values for use at Openlane
+// NewPasswordResetRequestEmail returns a new email message based on the config values
 func (c Config) NewPasswordResetRequestEmail() (*newman.EmailMessage, error) {
 	data := ResetRequestData{
 		EmailData: EmailData{
@@ -56,7 +70,7 @@ func (c Config) NewPasswordResetRequestEmail() (*newman.EmailMessage, error) {
 	return passwordResetRequest(data)
 }
 
-// NewPasswordResetSuccessEmail returns a new ResetSuccessData with default values for use at Openlane
+// NewPasswordResetSuccessEmail returns  a new email message based on the config values
 func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage, error) {
 	data := ResetSuccessData{
 		EmailData: EmailData{
@@ -69,13 +83,15 @@ func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage,
 	return passwordResetSuccess(data)
 }
 
-// NewSubscribedEmail returns a new SubscriberEmailData with default values for use at Openlane
-func (c Config) NewSubscribedEmail() (*newman.EmailMessage, error) {
+// NewSubscriberEmail returns a new email message based on the config values
+func (c Config) NewSubscriberEmail(r Recipient, org string) (*newman.EmailMessage, error) {
 	data := SubscriberEmailData{
 		EmailData: EmailData{
 			Config: c,
 		},
 	}
+
+	data.OrganizationName = org
 
 	return subscribe(data)
 }
