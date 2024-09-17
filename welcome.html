@@ -1,0 +1,35 @@
+{{ template "base.html" . }}
+
+{{ define "title" }}Welcome to {{ .CompanyName }}!{{ end }}
+{{ define "preheader" }}You have successfully completed your registration{{ end }}
+
+{{ define "content" }}
+<div class="content">
+  <p>Huzzah {{ .FirstName }}!!</p>
+
+  <p>
+    Welcome to the {{ .CompanyName }} platform - you can now log in to your account
+    <a href="{{ .ProductDomain }}">here</a>
+  </p>
+
+  <h2>What Next?</h2>
+
+  <p>
+    We've created a personal Organization just for you to help you get started - you can create additional Organizations
+    for your businesses, or just jump right in to see all the amazing features we've cooked up for you.
+    {{-if .DocsDomain }}
+    Check out the
+    <a href="{{ .DocsDomain }}/getting-started">starter guide</a> for more
+    information or our <a href="{{ .DocsDomain }}/examples">end-to-end examples</a>
+    for ideas and inspiration.
+    {{- end }}
+  </p>
+
+  <p>
+    If you have any questions, please reach out to us at
+    <a href="mailto:{{ .SupportEmail }}">{{ .SupportEmail }}</a>.
+  </p>
+
+  <p>><br />The {{ .CompanyName }} Team<br /></p>
+</div>
+{{ end }}

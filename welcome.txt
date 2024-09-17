@@ -1,0 +1,14 @@
+Hello {{ .FirstName }},
+
+Welcome to the {{ .CompanyName }} platform - you can now log in to your account at {{ .ProductDomain }}.
+
+What Next?
+
+We've created a personal Organization just for you to help you get started - you can create additional Organizations for your businesses, or just jump right in to see all the amazing features we've cooked up for you.  
+{{-if .DocsDomain }}
+Check out the starter guide {{ .DocsDomain }}/getting-started for more information, or our examples {{ .DocsDomain }}/examples for ideas and inspiration.
+{{- end }}
+
+If you have any questions, please reach out to us at {{ .SupportEmail }}.
+
+The {{ .CompanyName }} Team
