@@ -65,6 +65,13 @@ func WithFromEmail(email string) Option {
 	}
 }
 
+// WithSupportEmail sets the support email for the email
+func WithSupportEmail(email string) Option {
+	return func(t *Config) {
+		t.SupportEmail = email
+	}
+}
+
 // WithVerifyURL sets the verify URL for the email
 func WithVerifyURL(url string) Option {
 	return func(t *Config) {

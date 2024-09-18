@@ -1,24 +1,23 @@
 # Contributing
 
+Please read the [contributing](.github/CONTRIBUTING.md) guide as well as the [Developer Certificate of Origin](https://developercertificate.org/). You will be required to sign all commits to the OpenLane project, so if you're unfamiliar with how to set that up, see [github's documentation](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification).
+
 Given external users will not have write to the branches in this repository, you'll need to follow the forking process to open a PR - [here](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) is a guide from github on how to do so.
 
-Please also read our main [contributing guide](https://github.com/theopenlane/.github/blob/main/CONTRIBUTING.md) in addition to this one; the main guide mostly says that we'd like for you to open an issue first but it's not hard-required, and that we accept all forms of proposed changes given the state of this code base (in it's infancy, still!)
+## Licensing
 
-## Pre-requisites to a PR
+This repository contains open source software that comprises the OpenLane stack which is open source software under [Apache 2.0](LICENSE). OpenLane's SaaS / Cloud Services are products produced from this open source software exclusively by OpenLane Technology, Inc. This product is produced under our published commercial terms (which are subject to change). Any logos or trademarks in our repositories in [theopenlane](https://github.com/theopenlane) organization are not covered under the Apache License and are trademarks of OpenLane Technology, Inc.
 
-This repository contains a number of code generating functions / utilities which take schema modifications and scaffold out resolvers, graphql API schemas, openAPI specifications, among other things. To ensure you've generated all the necessary dependencies run `task pr`; this will run the entirety of the commands required to safely generate a PR. If for some reason one of the commands fails / encounters an error, you will need to debug the individual steps. It should be decently easy to follow the `Taskfile` in the root of this repository.
+Others are allowed to make their own distribution of this software or include this software in other commercial offerings, but cannot use any of the OpenLane logos, trademarks, cloud services, etc.
 
-### Pre-Commit Hooks
+## Security
 
-We have several `pre-commit` hooks that should be run before pushing a commit. Make sure this is installed:
+We take the security of our software products and services seriously, including our commercial services and all of the open source code repositories managed through our Github Organizations, such as [theopenlane](https://github.com/theopenlane). If you believe you have found a security vulnerability in any of our repositories or in our SaaS offering(s), please report it to us through coordinated disclosure.
 
-```bash
-brew install pre-commit
-pre-commit install
-```
+**Please do NOT report security vulnerabilities through public github issues, discussions, or pull requests!**
 
-You can optionally run against all files:
+Instead, please send an email to `security@theopenlane.io` with as much information as possible to best help us understand and resolve the issues. See the security policy attached to this repository for more details.
 
-```bash
-pre-commit run --all-files
-```
+## Questions?
+
+You can email us at `info@theopenlane.io`, open a github issue in this repository, or reach out to [matoszz](https://github.com/matoszz) directly.

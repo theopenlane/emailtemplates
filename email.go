@@ -30,12 +30,11 @@ func (c Config) NewVerifyEmail(r Recipient, token string) (*newman.EmailMessage,
 func (c Config) NewWelcomeEmail(r Recipient, org string) (*newman.EmailMessage, error) {
 	data := WelcomeData{
 		EmailData: EmailData{
-			Config: c,
+			Config:    c,
+			Recipient: r,
 		},
+		Organization: org,
 	}
-
-	data.Recipient = r
-	data.Organization = org
 
 	return welcome(data)
 }
@@ -43,6 +42,8 @@ func (c Config) NewWelcomeEmail(r Recipient, org string) (*newman.EmailMessage, 
 // NewInviteEmail returns a new email message based on the config values
 func (c Config) NewInviteEmail(r Recipient, inviterName, org, role, token string) (*newman.EmailMessage, error) {
 	data := c.newInvite(r, inviterName, org, role)
+
+	data.Recipient = r
 
 	var err error
 
@@ -65,14 +66,13 @@ func (c Config) NewInviteAcceptedEmail(r Recipient, inviterName string, org stri
 func (c Config) newInvite(r Recipient, inviterName string, org string, role string) InviteData {
 	data := InviteData{
 		EmailData: EmailData{
-			Config: c,
+			Config:    c,
+			Recipient: r,
 		},
+		InviterName:      inviterName,
+		OrganizationName: org,
+		Role:             role,
 	}
-
-	data.Recipient = r
-	data.InviterName = inviterName
-	data.OrganizationName = org
-	data.Role = role
 
 	return data
 }
@@ -81,11 +81,10 @@ func (c Config) newInvite(r Recipient, inviterName string, org string, role stri
 func (c Config) NewPasswordResetRequestEmail(r Recipient, token string) (*newman.EmailMessage, error) {
 	data := ResetRequestData{
 		EmailData: EmailData{
-			Config: c,
+			Config:    c,
+			Recipient: r,
 		},
 	}
-
-	data.Recipient = r
 
 	var err error
 
@@ -101,11 +100,10 @@ func (c Config) NewPasswordResetRequestEmail(r Recipient, token string) (*newman
 func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage, error) {
 	data := ResetSuccessData{
 		EmailData: EmailData{
-			Config: c,
+			Config:    c,
+			Recipient: r,
 		},
 	}
-
-	data.Recipient = r
 
 	return passwordResetSuccess(data)
 }
@@ -114,11 +112,11 @@ func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage,
 func (c Config) NewSubscriberEmail(r Recipient, org, token string) (*newman.EmailMessage, error) {
 	data := SubscriberEmailData{
 		EmailData: EmailData{
-			Config: c,
+			Config:    c,
+			Recipient: r,
 		},
+		OrganizationName: org,
 	}
-
-	data.OrganizationName = org
 
 	var err error
 
@@ -130,6 +128,7 @@ func (c Config) NewSubscriberEmail(r Recipient, org, token string) (*newman.Emai
 	return subscribe(data)
 }
 
+// addTokenToURL adds a token to the URL as a query parameter
 func addTokenToURL(baseURL, token string) (string, error) {
 	if token == "" {
 		return "", newMissingRequiredFieldError("token")
