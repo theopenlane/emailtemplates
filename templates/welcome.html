@@ -1,0 +1,39 @@
+{{ template "base.html" . }}
+
+{{ define "title" }}Welcome to {{ .CompanyName }}!{{ end }}
+{{ define "preheader" }}You have successfully completed your registration{{ end }}
+
+{{ define "content" }}
+<div class="content">
+  {{- if .LogoURL }}
+  <img src="{{ .LogoURL }}" alt="{{ .CompanyName }}" style="width: 100px; height: auto;" />
+  {{- end }}
+
+  <p>Huzzah {{ .Recipient.FirstName | ToUpper }}!!</p>
+
+  <p>
+    Welcome to the {{ .CompanyName }} platform - you can now log in to your account
+    <a href="{{ .URLS.Product }}">here</a>
+  </p>
+
+  <h2>What Next?</h2>
+
+  <p>
+    We've created a personal Organization just for you to help you get started - you can create additional Organizations
+    for your businesses, or just jump right in to see all the amazing features we've cooked up for you.
+    {{- if .URLS.Docs }}
+    Check out the
+    <a href="{{ .URLS.Docs }}/getting-started">starter guide</a> for more
+    information or our <a href="{{ .URLS.Docs }}/examples">end-to-end examples</a>
+    for ideas and inspiration.
+    {{- end }}
+  </p>
+
+  <p>
+    If you have any questions, please reach out to us at
+    <a href="mailto:{{ .SupportEmail }}">{{ .SupportEmail }}</a>.
+  </p>
+
+  <p>><br />The {{ .CompanyName }} Team<br /></p>
+</div>
+{{ end }}
