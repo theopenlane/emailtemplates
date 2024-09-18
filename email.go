@@ -6,15 +6,14 @@ import (
 	"github.com/theopenlane/newman"
 )
 
-// NewVerifyEmail returns a new email message based on the config values
+// NewVerifyEmail returns a new email message based on the config values and the provided recipient and token
 func (c Config) NewVerifyEmail(r Recipient, token string) (*newman.EmailMessage, error) {
 	data := VerifyEmailData{
 		EmailData: EmailData{
-			Config: c,
+			Config:    c,
+			Recipient: r,
 		},
 	}
-
-	data.Recipient = r
 
 	var err error
 
@@ -26,7 +25,7 @@ func (c Config) NewVerifyEmail(r Recipient, token string) (*newman.EmailMessage,
 	return verify(data)
 }
 
-// NewWelcomeEmail returns a new email message based on the config values
+// NewWelcomeEmail returns a new email message based on the config values and the provided recipient and organization name
 func (c Config) NewWelcomeEmail(r Recipient, org string) (*newman.EmailMessage, error) {
 	data := WelcomeData{
 		EmailData: EmailData{
@@ -39,9 +38,16 @@ func (c Config) NewWelcomeEmail(r Recipient, org string) (*newman.EmailMessage, 
 	return welcome(data)
 }
 
-// NewInviteEmail returns a new email message based on the config values
-func (c Config) NewInviteEmail(r Recipient, inviterName, org, role, token string) (*newman.EmailMessage, error) {
-	data := c.newInvite(r, inviterName, org, role)
+// InviteTemplateData includes the data needed to render the invite email templates
+type InviteTemplateData struct {
+	InviterName      string
+	OrganizationName string
+	Role             string
+}
+
+// NewInviteEmail returns a new email message based on the config values and the provided recipient and invite data
+func (c Config) NewInviteEmail(r Recipient, i InviteTemplateData, token string) (*newman.EmailMessage, error) {
+	data := c.newInvite(r, i)
 
 	data.Recipient = r
 
@@ -55,29 +61,29 @@ func (c Config) NewInviteEmail(r Recipient, inviterName, org, role, token string
 	return invite(data)
 }
 
-// NewInviteEmail returns a new email message based on the config values
-func (c Config) NewInviteAcceptedEmail(r Recipient, inviterName string, org string, role string) (*newman.EmailMessage, error) {
-	data := c.newInvite(r, inviterName, org, role)
+// NewInviteEmail returns a new email message based on the config values and the provided recipient and invite data
+func (c Config) NewInviteAcceptedEmail(r Recipient, i InviteTemplateData) (*newman.EmailMessage, error) {
+	data := c.newInvite(r, i)
 
 	return inviteAccepted(data)
 }
 
 // newInvite creates new invite data for use in the invite emails
-func (c Config) newInvite(r Recipient, inviterName string, org string, role string) InviteData {
+func (c Config) newInvite(r Recipient, i InviteTemplateData) InviteData {
 	data := InviteData{
 		EmailData: EmailData{
 			Config:    c,
 			Recipient: r,
 		},
-		InviterName:      inviterName,
-		OrganizationName: org,
-		Role:             role,
+		InviterName:      i.InviterName,
+		OrganizationName: i.OrganizationName,
+		Role:             i.Role,
 	}
 
 	return data
 }
 
-// NewPasswordResetRequestEmail returns a new email message based on the config values
+// NewPasswordResetRequestEmail returns a new email message based on the config values and the provided recipient and token
 func (c Config) NewPasswordResetRequestEmail(r Recipient, token string) (*newman.EmailMessage, error) {
 	data := ResetRequestData{
 		EmailData: EmailData{
@@ -96,7 +102,7 @@ func (c Config) NewPasswordResetRequestEmail(r Recipient, token string) (*newman
 	return passwordResetRequest(data)
 }
 
-// NewPasswordResetSuccessEmail returns  a new email message based on the config values
+// NewPasswordResetSuccessEmail returns  a new email message based on the config values and the provided recipient
 func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage, error) {
 	data := ResetSuccessData{
 		EmailData: EmailData{
@@ -108,14 +114,14 @@ func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage,
 	return passwordResetSuccess(data)
 }
 
-// NewSubscriberEmail returns a new email message based on the config values
-func (c Config) NewSubscriberEmail(r Recipient, org, token string) (*newman.EmailMessage, error) {
+// NewSubscriberEmail returns a new email message based on the config values and the provided recipient, organization name, and token
+func (c Config) NewSubscriberEmail(r Recipient, organizationName, token string) (*newman.EmailMessage, error) {
 	data := SubscriberEmailData{
 		EmailData: EmailData{
 			Config:    c,
 			Recipient: r,
 		},
-		OrganizationName: org,
+		OrganizationName: organizationName,
 	}
 
 	var err error

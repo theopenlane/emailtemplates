@@ -19,69 +19,103 @@ const (
 
 // Config includes fields that are common to all the email builders that are configurable
 type Config struct {
-	CompanyName    string    `koanf:"companyName" json:"companyName" default:""`
-	CompanyAddress string    `koanf:"companyAddress" json:"companyAddress" default:""`
-	Corporation    string    `koanf:"corporation" json:"corporation" default:""`
-	FromEmail      string    `koanf:"fromEmail" json:"fromEmail" default:""`
-	SupportEmail   string    `koanf:"supportEmail" json:"supportEmail" default:""`
-	LogoURL        string    `koanf:"logoURL" json:"logoURL" default:""`
-	URLS           URLConfig `koanf:"urls" json:"urls"`
+	// CompanyName is the name of the company that is sending the email
+	CompanyName string `koanf:"companyName" json:"companyName" default:""`
+	// CompanyAddress is the address of the company that is sending the email, included in the footer
+	CompanyAddress string `koanf:"companyAddress" json:"companyAddress" default:""`
+	// Corporation is the official corporation name that is sending the email, included in the footer
+	Corporation string `koanf:"corporation" json:"corporation" default:""`
+	// FromEmail is the email address that the email is sent from
+	FromEmail string `koanf:"fromEmail" json:"fromEmail" default:""`
+	// SupportEmail is the email address that the recipient can contact for support
+	SupportEmail string `koanf:"supportEmail" json:"supportEmail" default:""`
+	// LogoURL is the URL to the company logo that is included in the email if provided
+	LogoURL string `koanf:"logoURL" json:"logoURL" default:""`
+	// URLS includes URLs that are used in the email templates
+	URLS URLConfig `koanf:"urls" json:"urls"`
 }
 
 // URLConfig includes urls that are used in the email templates
 type URLConfig struct {
-	Root             string `koanf:"root" json:"root" default:""`
-	Product          string `koanf:"product" json:"product" default:""`
-	Docs             string `koanf:"docs" json:"docs" default:""`
-	Verify           string `koanf:"verify" json:"verify" default:""`
-	Invite           string `koanf:"invite" json:"invite" default:""`
-	PasswordReset    string `koanf:"reset" json:"reset" default:""`
+	// Root is the root domain for the email
+	Root string `koanf:"root" json:"root" default:""`
+	// Product is the product domain for the email, usually the main UI where a user logs in
+	Product string `koanf:"product" json:"product" default:""`
+	// Docs is the docs domain for the email, where a user can find documentation
+	Docs string `koanf:"docs" json:"docs" default:""`
+	// Verify is the URL to verify an email address
+	Verify string `koanf:"verify" json:"verify" default:""`
+	// Invite is the URL to accept an invite to an organization
+	Invite string `koanf:"invite" json:"invite" default:""`
+	// PasswordReset is the URL to reset a password
+	PasswordReset string `koanf:"reset" json:"reset" default:""`
+	// VerifySubscriber is the URL to verify a subscriber for an organization
 	VerifySubscriber string `koanf:"verifySubscriber" json:"verifySubscriber" default:""`
 }
 
 // EmailData includes data fields that are common to all the email builders
 type EmailData struct {
 	Config
-	Subject   string    `json:"subject"`
+	// Subject is the subject line of the email
+	Subject string `json:"subject"`
+	// Recipient is the person who will receive the email
 	Recipient Recipient `json:"recipient"`
 }
 
+// Recipient includes fields for the recipient of the email
 type Recipient struct {
-	Email     string `json:"email"`
+	// Email is the email address of the recipient
+	Email string `json:"email"`
+	// FirstName is the first name of the recipient
 	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
+	// LastName is the last name of the recipient
+	LastName string `json:"last_name"`
 }
 
+// WelcomeData includes fields for the welcome email
 type WelcomeData struct {
 	EmailData
+
+	// Organization is the name of the organization that the user is joining
 	Organization string `json:"organization"`
 }
 
+// VerifyEmailData includes fields for the verify email
 type VerifyEmailData struct {
 	EmailData
 }
 
+// SubscriberEmailData includes fields for the subscriber email
 type SubscriberEmailData struct {
 	EmailData
+
+	// Organization is the name of the organization that the user is subscribing to
 	OrganizationName string `json:"organization_name"`
 }
 
+// InviteData includes fields for the invite email
 type InviteData struct {
 	EmailData
-	InviterName      string `json:"inviter_name"`
+
+	// InviterName is the name of the person who is inviting the recipient
+	InviterName string `json:"inviter_name"`
+	// OrganizationName is the name of the organization that the user is being invited to
 	OrganizationName string `json:"organization_name"`
-	Role             string `json:"role"`
+	// Role is the role that the user is being invited to join the organization as
+	Role string `json:"role"`
 }
 
+// ResetRequestData includes fields for the password reset request email
 type ResetRequestData struct {
 	EmailData
 }
 
+// ResetSuccessData includes fields for the password reset success email
 type ResetSuccessData struct {
 	EmailData
 }
 
-// Build creates a new email from pre-rendered templates
+// Build valids and creates a new email from pre-rendered templates
 func (e EmailData) Build(text, html string) (*newman.EmailMessage, error) {
 	if err := e.Validate(); err != nil {
 		return nil, err

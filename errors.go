@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	// ErrMissingTemplate is returned when an email template is missing
+	// ErrMissingTemplate is returned when an email template is missing from the template directory
 	ErrMissingTemplate = errors.New("missing email template")
 )
 
@@ -16,7 +16,7 @@ type MissingRequiredFieldError struct {
 	RequiredField string
 }
 
-// Error returns the InvalidEmailConfigError in string format
+// Error returns the MissingRequiredFieldError in string format
 func (e *MissingRequiredFieldError) Error() string {
 	return fmt.Sprintf("%s is required", e.RequiredField)
 }

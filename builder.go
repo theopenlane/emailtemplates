@@ -67,16 +67,17 @@ func init() {
 // Render returns the text and html executed templates for the specified name and data
 func Render(name string, data interface{}) (text, html string, err error) {
 	if text, err = render(name+".txt", data); err != nil {
-		return "", "", err
+		return
 	}
 
 	if html, err = render(name+".html", data); err != nil {
-		return "", "", err
+		return
 	}
 
-	return text, html, nil
+	return
 }
 
+// render the provided template with the data
 func render(name string, data interface{}) (_ string, err error) {
 	t, ok := templates[name]
 	if !ok {

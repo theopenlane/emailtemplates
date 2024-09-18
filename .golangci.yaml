@@ -36,6 +36,5 @@ linters:
 issues:
   fix: true
   exclude-use-default: true
-  exclude-dirs:
-    - totp/testing/*
-  exclude-files:
+  exclude-dirs: []
+  exclude-files: []

@@ -33,7 +33,8 @@ of the Openlane platform.
         return err
     }
 
-    // recommended to use the https://github.com/theopenlane/newman package to send the email
+    // we recommend the use of the https://github.com/theopenlane/newman package to send the email
+    // which supports several providers including Resend, Mailgun, etc.
     // for brevity, this won't show how to create the client and assumes it was created beforehand
     if err := newmanClient.SendEmailWithContext(ctx, email); err != nil {
         return err
