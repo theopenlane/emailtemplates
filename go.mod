@@ -1,4 +1,4 @@
-module github.com/theopenlane/email-templates
+module github.com/theopenlane/emailtemplates
 
 go 1.23.1
 
