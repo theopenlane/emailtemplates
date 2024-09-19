@@ -1,3 +1,10 @@
+[![Build status](https://badge.buildkite.com/a3ddbcd266f3ac926b17d42f0cd6dd2a3921140e85c6f29ba4.svg)](https://buildkite.com/theopenlane/email-templates)
+[![Go Report Card](https://goreportcard.com/badge/github.com/theopenlane/emailtemplates)](https://goreportcard.com/report/github.com/theopenlane/emailtemplates)
+[![Go Reference](https://pkg.go.dev/badge/github.com/theopenlane/emailtemplates.svg)](https://pkg.go.dev/github.com/theopenlane/emailtemplates)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache2.0-brightgreen.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=theopenlane_emailtemplates&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=theopenlane_emailtemplates)
+
+
 # Email Templates
 
 This repository contains some of the common emails which would be sent to users
