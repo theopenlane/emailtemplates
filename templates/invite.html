@@ -15,7 +15,7 @@
 
   <p>{{ .InviterName }} has invited you to use {{ .CompanyName }} with them, in an Organization called {{ .OrganizationName }} with
     role of {{
-    .Role }}</p>
+    .Role | ToUpper }}</p>
 
   <p>Accept the invitation by clicking on the following button:</p>
 
@@ -31,7 +31,7 @@
 
   <p><a rel="noopener" target="_blank" href="{{ .URLS.Invite }}">{{ .URLS.Invite }}</a>
 
-  <p>If you have any questions, please contact <a href="mailto:{{ .SupportEmail }}">{{ .SupportEmail }}/a>.</p>
+  <p>If you have any questions, please contact <a href="mailto:{{ .SupportEmail }}">{{ .SupportEmail }}</a>.</p>
 
   <p><br />The {{ .CompanyName }} Team<br /></p>
 </div>
