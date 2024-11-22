@@ -1,6 +1,6 @@
 module github.com/theopenlane/emailtemplates
 
-go 1.23.1
+go 1.23.3
 
 require (
 	github.com/rs/zerolog v1.33.0
