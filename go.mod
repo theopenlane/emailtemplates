@@ -5,7 +5,7 @@ go 1.23.3
 require (
 	github.com/rs/zerolog v1.33.0
 	github.com/stoewer/go-strcase v1.3.0
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/theopenlane/newman v0.1.1
 )
 
