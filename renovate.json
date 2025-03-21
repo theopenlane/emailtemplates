@@ -1,11 +1,23 @@
 {
   "extends": [
-    "config:base"
+      "config:base"
   ],
   "postUpdateOptions": [
-    "gomodTidy"
+      "gomodTidy"
   ],
   "labels": [
-    "dependencies"
+      "dependencies"
+  ],
+  "packageRules": [
+      {
+          "groupName": "all patch dependencies",
+          "groupSlug": "all-patch",
+          "matchPackageNames": [
+              "*"
+          ],
+          "matchUpdateTypes": [
+              "patch"
+          ]
+      }
   ]
 }
