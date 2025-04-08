@@ -5,6 +5,13 @@ import (
 	"net/mail"
 )
 
+var (
+	ErrMissingCompanyAddress = errors.New("please provide your company's address")
+	ErrMissingCompanyName    = errors.New("please provide your company's name")
+	ErrMissingSenderEmail    = errors.New("please provide your sender email")
+	ErrInvalidSenderEmail    = errors.New("please provide a valid sender email ( from email )")
+)
+
 // New is a function that creates a new config for the email templates
 func New(options ...Option) (*Config, error) {
 	// initialize the resendEmailSender
@@ -24,19 +31,19 @@ func New(options ...Option) (*Config, error) {
 	}
 
 	if len(c.CompanyAddress) == 0 {
-		return nil, errors.New("please provide your company's address")
+		return nil, ErrMissingCompanyAddress
 	}
 
 	if len(c.CompanyName) == 0 {
-		return nil, errors.New("please provide your company's name")
+		return nil, ErrMissingCompanyName
 	}
 
 	if len(c.FromEmail) == 0 {
-		return nil, errors.New("please provide your sender email")
+		return nil, ErrMissingSenderEmail
 	}
 
 	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
-		return nil, errors.New("please provide a valid sender email ( from email )")
+		return nil, ErrInvalidSenderEmail
 	}
 
 	return c, nil
