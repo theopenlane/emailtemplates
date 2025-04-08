@@ -1,13 +1,47 @@
 package emailtemplates
 
+import (
+	"errors"
+	"net/mail"
+)
+
 // New is a function that creates a new config for the email templates
 func New(options ...Option) (*Config, error) {
 	// initialize the resendEmailSender
-	c := &Config{}
+	c := &Config{
+		templatesPath: defaultTemplatesDir,
+	}
 
 	// apply the options
 	for _, option := range options {
 		option(c)
+	}
+
+	switch len(c.templatesPath) {
+	case 0:
+		return nil, errors.New("please provide your templates path")
+
+	default:
+
+		if err := loadCustomTemplatePath(c.templatesPath); err != nil {
+			return nil, err
+		}
+	}
+
+	if len(c.CompanyAddress) == 0 {
+		return nil, errors.New("please provide your company's address")
+	}
+
+	if len(c.CompanyName) == 0 {
+		return nil, errors.New("please provide your company's name")
+	}
+
+	if len(c.FromEmail) == 0 {
+		return nil, errors.New("please provide your sender email")
+	}
+
+	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
+		return nil, errors.New("please provide a valid sender email ( from email )")
 	}
 
 	return c, nil
@@ -105,5 +139,13 @@ func WithVerifySubscriberURL(url string) Option {
 func WithLogoURL(url string) Option {
 	return func(t *Config) {
 		t.LogoURL = url
+	}
+}
+
+// WithTemplatesPath allows you configure the path to your templates
+// else we will use the default templates
+func WithTemplatesPath(p string) Option {
+	return func(c *Config) {
+		c.templatesPath = p
 	}
 }
