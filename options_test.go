@@ -114,45 +114,39 @@ func TestNew(t *testing.T) {
 		errMsg  string
 	}{
 		{
-			name:    "missing templates path",
-			options: []Option{WithTemplatesPath("")},
-			wantErr: true,
-			errMsg:  "please provide your templates path",
-		},
-		{
 			name: "missing company address",
 			options: []Option{
-				WithTemplatesPath("./templates"),
+				WithTemplatesPath("./testdata"),
 				WithCompanyName("Test Company"),
 				WithFromEmail("test@example.com"),
 			},
 			wantErr: true,
-			errMsg:  "please provide your company's address",
+			errMsg:  "company address is required",
 		},
 		{
 			name: "missing company name",
 			options: []Option{
-				WithTemplatesPath("./templates"),
+				WithTemplatesPath("./testdata"),
 				WithCompanyAddress("123 Test St"),
 				WithFromEmail("test@example.com"),
 			},
 			wantErr: true,
-			errMsg:  "please provide your company's name",
+			errMsg:  "company name is required",
 		},
 		{
 			name: "missing from email",
 			options: []Option{
-				WithTemplatesPath("./templates"),
+				WithTemplatesPath("./testdata"),
 				WithCompanyAddress("123 Test St"),
 				WithCompanyName("Test Company"),
 			},
 			wantErr: true,
-			errMsg:  "please provide your sender email",
+			errMsg:  "sender email is required",
 		},
 		{
 			name: "invalid from email",
 			options: []Option{
-				WithTemplatesPath("./templates"),
+				WithTemplatesPath("./testdata"),
 				WithCompanyAddress("123 Test St"),
 				WithCompanyName("Test Company"),
 				WithFromEmail("invalid-email"),
@@ -163,12 +157,22 @@ func TestNew(t *testing.T) {
 		{
 			name: "valid configuration",
 			options: []Option{
-				WithTemplatesPath("./templates"),
+				WithTemplatesPath("./testdata"),
 				WithCompanyAddress("123 Test St"),
 				WithCompanyName("Test Company"),
 				WithFromEmail("test@example.com"),
 			},
 			wantErr: false,
+		},
+		{
+			name: "missing templates path",
+			options: []Option{
+				WithTemplatesPath(""),
+				WithCompanyAddress("123 Test St"),
+				WithCompanyName("Test Company"),
+				WithFromEmail("test@example.com"),
+			},
+			wantErr: false, // no templates, the default ones will be used
 		},
 	}
 
@@ -179,6 +183,7 @@ func TestNew(t *testing.T) {
 				assert.Error(t, err)
 				assert.Equal(t, tt.errMsg, err.Error())
 				assert.Nil(t, cfg)
+
 				return
 			}
 

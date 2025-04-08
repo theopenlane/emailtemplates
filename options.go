@@ -6,10 +6,7 @@ import (
 )
 
 var (
-	ErrMissingCompanyAddress = errors.New("please provide your company's address")
-	ErrMissingCompanyName    = errors.New("please provide your company's name")
-	ErrMissingSenderEmail    = errors.New("please provide your sender email")
-	ErrInvalidSenderEmail    = errors.New("please provide a valid sender email ( from email )")
+	ErrInvalidSenderEmail = errors.New("please provide a valid sender email ( from email )")
 )
 
 // New is a function that creates a new config for the email templates
@@ -24,22 +21,22 @@ func New(options ...Option) (*Config, error) {
 		option(c)
 	}
 
-	if c.templatesPath != defaultTemplatesDir {
+	if c.templatesPath != defaultTemplatesDir && len(c.templatesPath) != 0 {
 		if err := loadCustomTemplatePath(c.templatesPath); err != nil {
 			return nil, err
 		}
 	}
 
 	if len(c.CompanyAddress) == 0 {
-		return nil, ErrMissingCompanyAddress
+		return nil, newMissingRequiredFieldError("company address")
 	}
 
 	if len(c.CompanyName) == 0 {
-		return nil, ErrMissingCompanyName
+		return nil, newMissingRequiredFieldError("company name")
 	}
 
 	if len(c.FromEmail) == 0 {
-		return nil, ErrMissingSenderEmail
+		return nil, newMissingRequiredFieldError("sender email")
 	}
 
 	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
