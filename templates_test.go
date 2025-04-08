@@ -246,3 +246,43 @@ func TestInviteWithNew(t *testing.T) {
 
 	assert.Equal(t, "custom invite email template\n", email.HTML)
 }
+
+func TestWelcomeWithNewDefaultTemplate(t *testing.T) {
+	cfg, err := New(
+		WithCompanyName("Test Company"),
+		WithCompanyAddress("123 Test St"),
+		WithFromEmail("test@example.com"),
+	)
+	require.NoError(t, err)
+
+	r := Recipient{
+		Email: "test@example.com",
+	}
+
+	email, err := cfg.NewWelcomeEmail(r, "Test Org")
+	require.NoError(t, err)
+	require.NotNil(t, email)
+}
+
+func TestInviteWithNewDefaultTemplate(t *testing.T) {
+	cfg, err := New(
+		WithCompanyName("Test Company"),
+		WithCompanyAddress("123 Test St"),
+		WithFromEmail("test@example.com"),
+	)
+	require.NoError(t, err)
+
+	r := Recipient{
+		Email: "test@example.com",
+	}
+
+	i := InviteTemplateData{
+		InviterName:      "John Doe",
+		OrganizationName: "Test Org",
+		Role:             "Admin",
+	}
+
+	email, err := cfg.NewInviteEmail(r, i, "test-token")
+	require.NoError(t, err)
+	require.NotNil(t, email)
+}

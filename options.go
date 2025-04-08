@@ -17,12 +17,7 @@ func New(options ...Option) (*Config, error) {
 		option(c)
 	}
 
-	switch len(c.templatesPath) {
-	case 0:
-		return nil, errors.New("please provide your templates path")
-
-	default:
-
+	if c.templatesPath != defaultTemplatesDir {
 		if err := loadCustomTemplatePath(c.templatesPath); err != nil {
 			return nil, err
 		}
