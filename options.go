@@ -1,13 +1,97 @@
 package emailtemplates
 
+import (
+	"errors"
+	"fmt"
+	"net/mail"
+	"os"
+	"path/filepath"
+	"sync"
+	"text/template"
+)
+
+var (
+	ErrInvalidSenderEmail = errors.New("please provide a valid sender email ( from email )")
+	templateLoadOnce      sync.Once
+	templateLoadErr       error
+)
+
+// ensureCustomTemplatesLoaded ensures templates are loaded only once
+// Also this makes sure if we have a custom template path, we should load them
+func ensureCustomTemplatesLoaded(templatePath string) error {
+	templateLoadOnce.Do(func() {
+		if templatePath != defaultTemplatesDir && templatePath != "" {
+			templateFiles, err := os.ReadDir(templatePath)
+			if err != nil {
+				templateLoadErr = fmt.Errorf("could not read template files from %q: %w", templatePath, err)
+				return
+			}
+
+			for _, file := range templateFiles {
+				if file.IsDir() {
+					continue
+				}
+
+				pattern := filepath.Join(templatePath, file.Name())
+
+				tmpl, err := template.New(file.Name()).
+					Funcs(fm).
+					ParseFiles(pattern)
+
+				if err != nil {
+					templateLoadErr = fmt.Errorf("could not parse template %q: %w", file.Name(), err)
+					return
+				}
+
+				templates[file.Name()] = tmpl
+			}
+		}
+	})
+
+	return templateLoadErr
+}
+
+// validate checks if all required fields are set and valid
+func (c *Config) validate() error {
+	if c.TemplatesPath != defaultTemplatesDir && c.TemplatesPath != "" {
+		if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+			return err
+		}
+	}
+
+	if c.CompanyAddress == "" {
+		return newMissingRequiredFieldError("company address")
+	}
+
+	if c.CompanyName == "" {
+		return newMissingRequiredFieldError("company name")
+	}
+
+	if c.FromEmail == "" {
+		return newMissingRequiredFieldError("sender email")
+	}
+
+	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
+		return ErrInvalidSenderEmail
+	}
+
+	return nil
+}
+
 // New is a function that creates a new config for the email templates
 func New(options ...Option) (*Config, error) {
 	// initialize the resendEmailSender
-	c := &Config{}
+	c := &Config{
+		TemplatesPath: defaultTemplatesDir,
+	}
 
 	// apply the options
 	for _, option := range options {
 		option(c)
+	}
+
+	if err := c.validate(); err != nil {
+		return nil, err
 	}
 
 	return c, nil
@@ -105,5 +189,13 @@ func WithVerifySubscriberURL(url string) Option {
 func WithLogoURL(url string) Option {
 	return func(t *Config) {
 		t.LogoURL = url
+	}
+}
+
+// WithTemplatesPath allows you configure the path to your templates
+// else we will use the default templates
+func WithTemplatesPath(p string) Option {
+	return func(c *Config) {
+		c.TemplatesPath = p
 	}
 }

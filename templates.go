@@ -33,6 +33,8 @@ type Config struct {
 	LogoURL string `koanf:"logoURL" json:"logoURL" default:""`
 	// URLS includes URLs that are used in the email templates
 	URLS URLConfig `koanf:"urls" json:"urls"`
+
+	TemplatesPath string `koanf:"templatesPath" json:"templatesPath"`
 }
 
 // URLConfig includes urls that are used in the email templates

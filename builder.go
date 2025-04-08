@@ -14,23 +14,28 @@ import (
 
 const (
 	// Email templates must be provided in this directory and are loaded at compile time
-	templatesDir = "templates"
+	defaultTemplatesDir = "templates"
 
 	// Partials are included when rendering templates for composability and reuse - includes footer, header, etc.
-	partialsDir = "partials"
+	defaultPartialsDir = "partials"
 )
 
 var (
 	//go:embed templates/*.html templates/*.txt templates/partials/*html
 	files     embed.FS
 	templates map[string]*template.Template
+
+	// Shared function map
+	fm = template.FuncMap{
+		"ToUpper": strcase.UpperCamelCase,
+	}
 )
 
 // Load templates when the package is imported
 func init() {
 	templates = make(map[string]*template.Template)
 
-	templateFiles, err := fs.ReadDir(files, templatesDir)
+	templateFiles, err := fs.ReadDir(files, defaultTemplatesDir)
 	if err != nil {
 		log.Panic().Err(err).Msg("could not read template files")
 	}
@@ -44,15 +49,10 @@ func init() {
 
 		// Each template will be accessible by its base name in the global map
 		patterns := make([]string, 0, 2) //nolint:mnd
-		patterns = append(patterns, filepath.Join(templatesDir, file.Name()))
+		patterns = append(patterns, filepath.Join(defaultTemplatesDir, file.Name()))
 
 		if filepath.Ext(file.Name()) == ".html" {
-			patterns = append(patterns, filepath.Join(templatesDir, partialsDir, "*.html"))
-		}
-
-		// function map for template
-		fm := template.FuncMap{
-			"ToUpper": strcase.UpperCamelCase,
+			patterns = append(patterns, filepath.Join(defaultTemplatesDir, defaultPartialsDir, "*.html"))
 		}
 
 		var err error
