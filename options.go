@@ -25,7 +25,7 @@ func (c *Config) validate() error {
 		return newMissingRequiredFieldError("company name")
 	}
 
-	if len(c.FromEmail) == 0 {
+	if c.FromEmail == "" {
 		return newMissingRequiredFieldError("sender email")
 	}
 

@@ -66,7 +66,7 @@ func init() {
 }
 
 func loadCustomTemplatePath(templatePath string) error {
-	templateFiles, err := fs.ReadDir(os.DirFS(templatePath), ".")
+	templateFiles, err := os.ReadDir(templatePath)
 	if err != nil {
 		return fmt.Errorf("could not read template files from %q: %w", templatePath, err)
 	}
