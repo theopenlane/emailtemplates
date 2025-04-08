@@ -9,6 +9,33 @@ var (
 	ErrInvalidSenderEmail = errors.New("please provide a valid sender email ( from email )")
 )
 
+// validate checks if all required fields are set and valid
+func (c *Config) validate() error {
+	if c.templatesPath != defaultTemplatesDir && len(c.templatesPath) != 0 {
+		if err := loadCustomTemplatePath(c.templatesPath); err != nil {
+			return err
+		}
+	}
+
+	if len(c.CompanyAddress) == 0 {
+		return newMissingRequiredFieldError("company address")
+	}
+
+	if len(c.CompanyName) == 0 {
+		return newMissingRequiredFieldError("company name")
+	}
+
+	if len(c.FromEmail) == 0 {
+		return newMissingRequiredFieldError("sender email")
+	}
+
+	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
+		return ErrInvalidSenderEmail
+	}
+
+	return nil
+}
+
 // New is a function that creates a new config for the email templates
 func New(options ...Option) (*Config, error) {
 	// initialize the resendEmailSender
@@ -21,26 +48,8 @@ func New(options ...Option) (*Config, error) {
 		option(c)
 	}
 
-	if c.templatesPath != defaultTemplatesDir && len(c.templatesPath) != 0 {
-		if err := loadCustomTemplatePath(c.templatesPath); err != nil {
-			return nil, err
-		}
-	}
-
-	if len(c.CompanyAddress) == 0 {
-		return nil, newMissingRequiredFieldError("company address")
-	}
-
-	if len(c.CompanyName) == 0 {
-		return nil, newMissingRequiredFieldError("company name")
-	}
-
-	if len(c.FromEmail) == 0 {
-		return nil, newMissingRequiredFieldError("sender email")
-	}
-
-	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
-		return nil, ErrInvalidSenderEmail
+	if err := c.validate(); err != nil {
+		return nil, err
 	}
 
 	return c, nil
