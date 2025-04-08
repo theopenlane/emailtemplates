@@ -34,7 +34,7 @@ type Config struct {
 	// URLS includes URLs that are used in the email templates
 	URLS URLConfig `koanf:"urls" json:"urls"`
 
-	templatesPath string
+	TemplatesPath string `koanf:"templatesPath" json:"templatesPath"`
 }
 
 // URLConfig includes urls that are used in the email templates

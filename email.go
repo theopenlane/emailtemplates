@@ -8,6 +8,10 @@ import (
 
 // NewVerifyEmail returns a new email message based on the config values and the provided recipient and token
 func (c Config) NewVerifyEmail(r Recipient, token string) (*newman.EmailMessage, error) {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return nil, err
+	}
+
 	data := VerifyEmailData{
 		EmailData: EmailData{
 			Config:    c,
@@ -27,6 +31,10 @@ func (c Config) NewVerifyEmail(r Recipient, token string) (*newman.EmailMessage,
 
 // NewWelcomeEmail returns a new email message based on the config values and the provided recipient and organization name
 func (c Config) NewWelcomeEmail(r Recipient, org string) (*newman.EmailMessage, error) {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return nil, err
+	}
+
 	data := WelcomeData{
 		EmailData: EmailData{
 			Config:    c,
@@ -47,6 +55,10 @@ type InviteTemplateData struct {
 
 // NewInviteEmail returns a new email message based on the config values and the provided recipient and invite data
 func (c Config) NewInviteEmail(r Recipient, i InviteTemplateData, token string) (*newman.EmailMessage, error) {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return nil, err
+	}
+
 	data := c.newInvite(r, i)
 
 	data.Recipient = r
@@ -63,6 +75,10 @@ func (c Config) NewInviteEmail(r Recipient, i InviteTemplateData, token string) 
 
 // NewInviteEmail returns a new email message based on the config values and the provided recipient and invite data
 func (c Config) NewInviteAcceptedEmail(r Recipient, i InviteTemplateData) (*newman.EmailMessage, error) {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return nil, err
+	}
+
 	data := c.newInvite(r, i)
 
 	return inviteAccepted(data)
@@ -85,6 +101,10 @@ func (c Config) newInvite(r Recipient, i InviteTemplateData) InviteData {
 
 // NewPasswordResetRequestEmail returns a new email message based on the config values and the provided recipient and token
 func (c Config) NewPasswordResetRequestEmail(r Recipient, token string) (*newman.EmailMessage, error) {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return nil, err
+	}
+
 	data := ResetRequestData{
 		EmailData: EmailData{
 			Config:    c,
@@ -104,6 +124,10 @@ func (c Config) NewPasswordResetRequestEmail(r Recipient, token string) (*newman
 
 // NewPasswordResetSuccessEmail returns  a new email message based on the config values and the provided recipient
 func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage, error) {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return nil, err
+	}
+
 	data := ResetSuccessData{
 		EmailData: EmailData{
 			Config:    c,
@@ -116,6 +140,10 @@ func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage,
 
 // NewSubscriberEmail returns a new email message based on the config values and the provided recipient, organization name, and token
 func (c Config) NewSubscriberEmail(r Recipient, organizationName, token string) (*newman.EmailMessage, error) {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return nil, err
+	}
+
 	data := SubscriberEmailData{
 		EmailData: EmailData{
 			Config:    c,

@@ -4,7 +4,6 @@ import (
 	"embed"
 	"fmt"
 	"io/fs"
-	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -63,33 +62,6 @@ func init() {
 			log.Panic().Err(err).Str("template", file.Name()).Msg("could not parse template")
 		}
 	}
-}
-
-func loadCustomTemplatePath(templatePath string) error {
-	templateFiles, err := os.ReadDir(templatePath)
-	if err != nil {
-		return fmt.Errorf("could not read template files from %q: %w", templatePath, err)
-	}
-
-	for _, file := range templateFiles {
-		if file.IsDir() {
-			continue
-		}
-
-		pattern := filepath.Join(templatePath, file.Name())
-
-		tmpl, err := template.New(file.Name()).
-			Funcs(fm).
-			ParseFiles(pattern)
-
-		if err != nil {
-			return fmt.Errorf("could not parse template %q: %w", file.Name(), err)
-		}
-
-		templates[file.Name()] = tmpl
-	}
-
-	return nil
 }
 
 // Render returns the text and html executed templates for the specified name and data

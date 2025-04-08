@@ -102,7 +102,7 @@ func TestOptions(t *testing.T) {
 		cfg := &Config{}
 		opt := WithTemplatesPath("./custom/templates")
 		opt(cfg)
-		assert.Equal(t, "./custom/templates", cfg.templatesPath)
+		assert.Equal(t, "./custom/templates", cfg.TemplatesPath)
 	})
 }
 
