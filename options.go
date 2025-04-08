@@ -59,11 +59,11 @@ func (c *Config) validate() error {
 		}
 	}
 
-	if len(c.CompanyAddress) == 0 {
+	if c.CompanyAddress == "" {
 		return newMissingRequiredFieldError("company address")
 	}
 
-	if len(c.CompanyName) == 0 {
+	if c.CompanyName == "" {
 		return newMissingRequiredFieldError("company name")
 	}
 
