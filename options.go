@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -16,10 +18,8 @@ var (
 
 // New is a function that creates a new config for the email templates
 func New(options ...Option) (*Config, error) {
-	// initialize the resendEmailSender
-	c := &Config{
-		TemplatesPath: defaultTemplatesDir,
-	}
+	// initialize the email config
+	c := &Config{}
 
 	// apply the options
 	for _, option := range options {
@@ -31,6 +31,13 @@ func New(options ...Option) (*Config, error) {
 	}
 
 	return c, nil
+}
+
+// Validate the config and ensures that all required fields are set
+// and that the templates are loaded correctly
+// This function is called when the config is created outside the New function
+func (c *Config) Validate() error {
+	return c.validate()
 }
 
 // Option is a function that sets a field on an EmailMessage
@@ -148,16 +155,16 @@ func WithTemplatesPath(p string) Option {
 // this will include the partials directory as well if it exists
 func ensureCustomTemplatesLoaded(templatePath string) (err error) {
 	templateLoadOnce.Do(func() {
-		if templatePath != defaultTemplatesDir && templatePath != "" {
-			partials, err := getPartials(templatePath)
-			if err != nil {
-				return
-			}
+		partials, err = getPartials(templatePath)
+		if err != nil {
+			log.Fatal().Err(err).Msgf("could not load partials from %q", templatePath)
+			return
+		}
 
-			err = loadTemplatesFromDir(templatePath, partials)
-			if err != nil {
-				return
-			}
+		err = loadTemplatesFromDir(templatePath, partials)
+		if err != nil {
+			log.Fatal().Err(err).Msgf("could not load templates from %q", templatePath)
+			return
 		}
 	})
 
@@ -174,19 +181,24 @@ func getPartials(path string) ([]string, error) {
 
 	for _, file := range templateFiles {
 		if file.Name() == defaultPartialsDir {
-			p, err := getPartials(filepath.Join(path, file.Name()))
-			if err != nil {
+			partialPath := filepath.Join(path, file.Name())
+			if err := loadTemplatesFromDir(partialPath, partials); err != nil {
 				return nil, err
 			}
 
-			partials = append(partials, p...)
-		}
+			templateFiles, err := os.ReadDir(partialPath)
+			if err != nil {
+				return nil, fmt.Errorf("could not read template files from %q: %w", path, err)
+			}
 
-		if err := loadTemplatesFromDir(filepath.Join(path, file.Name()), partials); err != nil {
-			return nil, err
-		}
+			for _, file := range templateFiles {
+				if file.IsDir() {
+					continue
+				}
 
-		partials = append(partials, filepath.Join(path, file.Name()))
+				partials = append(partials, filepath.Join(defaultPartialsDir, file.Name()))
+			}
+		}
 	}
 
 	return partials, nil
@@ -219,7 +231,7 @@ func loadTemplatesFromDir(path string, partials []string) error {
 
 // validate checks if all required fields are set and valid
 func (c *Config) validate() error {
-	if c.TemplatesPath != defaultTemplatesDir && c.TemplatesPath != "" {
+	if c.TemplatesPath != "" {
 		if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
 			return err
 		}

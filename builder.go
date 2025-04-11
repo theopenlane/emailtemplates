@@ -25,6 +25,7 @@ var (
 	//go:embed templates/*.html templates/*.txt templates/partials/*html templates/partials/*txt
 	files     embed.FS
 	templates map[string]*template.Template
+	partials  []string
 
 	// Shared function map
 	fm = template.FuncMap{
