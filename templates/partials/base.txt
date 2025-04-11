@@ -1,0 +1,5 @@
+{{ block "header" . }}{{ end }}
+{{ block "content" . }}{{ end }}
+{{ template "help.txt" . }}
+{{ template "signature.txt" . }}
+{{ template "footer.txt" . }}

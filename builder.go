@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -21,7 +22,7 @@ const (
 )
 
 var (
-	//go:embed templates/*.html templates/*.txt templates/partials/*html
+	//go:embed templates/*.html templates/*.txt templates/partials/*html templates/partials/*txt
 	files     embed.FS
 	templates map[string]*template.Template
 
@@ -42,26 +43,54 @@ func init() {
 
 	// Each template needs to be parsed independently to ensure that define directives
 	// are not overwritten if they have the same name; e.g. to use the base template
+
 	for _, file := range templateFiles {
 		if file.IsDir() {
 			continue
 		}
 
-		// Each template will be accessible by its base name in the global map
-		patterns := make([]string, 0, 2) //nolint:mnd
-		patterns = append(patterns, filepath.Join(defaultTemplatesDir, file.Name()))
+		templates[file.Name()] = parseTemplate(file.Name())
+	}
+}
 
-		if filepath.Ext(file.Name()) == ".html" {
-			patterns = append(patterns, filepath.Join(defaultTemplatesDir, defaultPartialsDir, "*.html"))
-		}
+func parseTemplate(name string) *template.Template {
+	// Each template will be accessible by its base name in the global map
+	patterns := []string{}
+	patterns = append(patterns, filepath.Join(defaultTemplatesDir, name))
 
-		var err error
-		templates[file.Name()], err = template.New(file.Name()).Funcs(fm).ParseFS(files, patterns...)
-
-		if err != nil {
-			log.Panic().Err(err).Str("template", file.Name()).Msg("could not parse template")
+	validExtensions := []string{".txt", ".html"}
+	for _, ext := range validExtensions {
+		if filepath.Ext(name) == ext {
+			patterns = append(patterns, filepath.Join(
+				defaultTemplatesDir,
+				defaultPartialsDir, "*"+ext))
 		}
 	}
+
+	tmpl, err := template.New(name).Funcs(fm).ParseFS(files, patterns...)
+	if err != nil {
+		log.Fatal().Err(err).Str("template", name).Msg("could not parse template")
+	}
+
+	return tmpl
+}
+
+// loadTemplate loads a template from the file system
+func parseCustomTemplate(file os.DirEntry, path string, partials []string) (*template.Template, error) {
+	customFiles := []string{filepath.Join(path, file.Name())}
+
+	for _, partial := range partials {
+		customFiles = append(customFiles, filepath.Join(path, partial))
+	}
+
+	tmpl, err := template.New(file.Name()).
+		Funcs(fm).
+		ParseFiles(customFiles...)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse template %q: %w", file.Name(), err)
+	}
+
+	return tmpl, nil
 }
 
 // Render returns the text and html executed templates for the specified name and data

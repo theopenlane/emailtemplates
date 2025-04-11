@@ -1,6 +1,7 @@
 package emailtemplates
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -239,7 +240,9 @@ func TestWelcomeWithNew(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, email)
 
-	assert.Equal(t, "custom welcome email template\n", email.HTML)
+	expectedHTML, err := os.ReadFile("testdata/expected/welcome.html")
+	require.NoError(t, err)
+	assert.Equal(t, string(expectedHTML), email.HTML)
 }
 
 func TestInviteWithNew(t *testing.T) {
@@ -265,7 +268,9 @@ func TestInviteWithNew(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, email)
 
-	assert.Equal(t, "custom invite email template\n", email.HTML)
+	expectedHTML, err := os.ReadFile("testdata/expected/invite.html")
+	require.NoError(t, err)
+	assert.Equal(t, string(expectedHTML), email.HTML)
 }
 
 func TestWelcomeWithNewDefaultTemplate(t *testing.T) {

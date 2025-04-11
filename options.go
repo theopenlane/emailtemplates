@@ -7,76 +7,12 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
-	"text/template"
 )
 
 var (
 	ErrInvalidSenderEmail = errors.New("please provide a valid sender email ( from email )")
 	templateLoadOnce      sync.Once
-	templateLoadErr       error
 )
-
-// ensureCustomTemplatesLoaded ensures templates are loaded only once
-// Also this makes sure if we have a custom template path, we should load them
-func ensureCustomTemplatesLoaded(templatePath string) error {
-	templateLoadOnce.Do(func() {
-		if templatePath != defaultTemplatesDir && templatePath != "" {
-			templateFiles, err := os.ReadDir(templatePath)
-			if err != nil {
-				templateLoadErr = fmt.Errorf("could not read template files from %q: %w", templatePath, err)
-				return
-			}
-
-			for _, file := range templateFiles {
-				if file.IsDir() {
-					continue
-				}
-
-				pattern := filepath.Join(templatePath, file.Name())
-
-				tmpl, err := template.New(file.Name()).
-					Funcs(fm).
-					ParseFiles(pattern)
-
-				if err != nil {
-					templateLoadErr = fmt.Errorf("could not parse template %q: %w", file.Name(), err)
-					return
-				}
-
-				templates[file.Name()] = tmpl
-			}
-		}
-	})
-
-	return templateLoadErr
-}
-
-// validate checks if all required fields are set and valid
-func (c *Config) validate() error {
-	if c.TemplatesPath != defaultTemplatesDir && c.TemplatesPath != "" {
-		if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
-			return err
-		}
-	}
-
-	if c.CompanyAddress == "" {
-		return newMissingRequiredFieldError("company address")
-	}
-
-	if c.CompanyName == "" {
-		return newMissingRequiredFieldError("company name")
-	}
-
-	if c.FromEmail == "" {
-		return newMissingRequiredFieldError("sender email")
-	}
-
-	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
-		return ErrInvalidSenderEmail
-	}
-
-	return nil
-}
 
 // New is a function that creates a new config for the email templates
 func New(options ...Option) (*Config, error) {
@@ -205,4 +141,105 @@ func WithTemplatesPath(p string) Option {
 	return func(c *Config) {
 		c.TemplatesPath = p
 	}
+}
+
+// ensureCustomTemplatesLoaded ensures templates are loaded only once
+// Also this makes sure if we have a custom template path, we should load them
+// this will include the partials directory as well if it exists
+func ensureCustomTemplatesLoaded(templatePath string) (err error) {
+	templateLoadOnce.Do(func() {
+		if templatePath != defaultTemplatesDir && templatePath != "" {
+			partials, err := getPartials(templatePath)
+			if err != nil {
+				return
+			}
+
+			err = loadTemplatesFromDir(templatePath, partials)
+			if err != nil {
+				return
+			}
+		}
+	})
+
+	return
+}
+
+func getPartials(path string) ([]string, error) {
+	partials := []string{}
+
+	templateFiles, err := os.ReadDir(path)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, file := range templateFiles {
+		if file.Name() == defaultPartialsDir {
+			p, err := getPartials(filepath.Join(path, file.Name()))
+			if err != nil {
+				return nil, err
+			}
+
+			partials = append(partials, p...)
+		}
+
+		if err := loadTemplatesFromDir(filepath.Join(path, file.Name()), partials); err != nil {
+			return nil, err
+		}
+
+		partials = append(partials, filepath.Join(path, file.Name()))
+	}
+
+	return partials, nil
+}
+
+// loadTemplatesFromDir loads templates from the specified directory
+// and recursively loads partials
+func loadTemplatesFromDir(path string, partials []string) error {
+	templateFiles, err := os.ReadDir(path)
+	if err != nil {
+		return fmt.Errorf("could not read template files from %q: %w", path, err)
+	}
+
+	for _, file := range templateFiles {
+		if file.IsDir() {
+			continue
+		}
+
+		key := file.Name()
+		// path := filepath.Join(path, key)
+
+		templates[key], err = parseCustomTemplate(file, path, partials)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// validate checks if all required fields are set and valid
+func (c *Config) validate() error {
+	if c.TemplatesPath != defaultTemplatesDir && c.TemplatesPath != "" {
+		if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+			return err
+		}
+	}
+
+	if c.CompanyAddress == "" {
+		return newMissingRequiredFieldError("company address")
+	}
+
+	if c.CompanyName == "" {
+		return newMissingRequiredFieldError("company name")
+	}
+
+	if c.FromEmail == "" {
+		return newMissingRequiredFieldError("sender email")
+	}
+
+	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
+		return ErrInvalidSenderEmail
+	}
+
+	return nil
 }

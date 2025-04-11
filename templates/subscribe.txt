@@ -1,8 +1,9 @@
+{{ template "base.txt" . }}
+
+{{ define "content" }}
 Thank you for subscribing to {{ .OrganizationName }} - in order to confirm the subscription of future emails, please verify your email address by clicking the button below, or copy and paste the linked URL into your browser:
 
 {{ .URLS.VerifySubscriber }}
 
 If you are having trouble verifying your email address, please contact us at {{ .SupportEmail }}.
-
-Thank you,
-The {{ .CompanyName }} Team
+{{ end }}
