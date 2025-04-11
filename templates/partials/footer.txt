@@ -1,0 +1,7 @@
+Terms  {{ .URLS.Root }}legal/terms-of-service
+Privacy {{ .URLS.Root }}/legal/privacy
+Unsubscribe {{ .URLS.Product }}/unsubscribe?email={{ .Recipient.Email }}
+
+{{ .CompanyAddress }}
+
+© {{ .Year }} {{ .Corporation }} All rights reserved.
