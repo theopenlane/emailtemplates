@@ -2,6 +2,7 @@ package emailtemplates
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/theopenlane/newman"
 )
@@ -25,6 +26,8 @@ type Config struct {
 	CompanyAddress string `koanf:"companyAddress" json:"companyAddress" default:""`
 	// Corporation is the official corporation name that is sending the email, included in the footer
 	Corporation string `koanf:"corporation" json:"corporation" default:""`
+	// Year is the year that the email is being sent, included in the footer for the copyright year
+	Year int `koanf:"year" json:"year" default:""`
 	// FromEmail is the email address that the email is sent from
 	FromEmail string `koanf:"fromEmail" json:"fromEmail" default:""`
 	// SupportEmail is the email address that the recipient can contact for support
@@ -33,8 +36,8 @@ type Config struct {
 	LogoURL string `koanf:"logoURL" json:"logoURL" default:""`
 	// URLS includes URLs that are used in the email templates
 	URLS URLConfig `koanf:"urls" json:"urls"`
-
-	TemplatesPath string `koanf:"templatesPath" json:"templatesPath"`
+	// TemplatesPath is the path to the email templates to override the default templates
+	TemplatesPath string `koanf:"templatesPath" json:"templatesPath" default:""`
 }
 
 // URLConfig includes urls that are used in the email templates
@@ -142,6 +145,11 @@ func (e EmailData) Validate() error {
 		return newMissingRequiredFieldError("subject")
 	case e.Recipient.Email == "":
 		return newMissingRequiredFieldError("email")
+	}
+
+	// set default values
+	if e.Year == 0 {
+		e.Year = time.Now().Year()
 	}
 
 	return nil

@@ -1,7 +1,7 @@
+{{ template "base.txt" . }}
+
+{{ define "content" }}
 You've been added to an Organization
 
 You have been successfully added to organization {{ .OrganizationName }}, login and start building!
-
-Thank you,
-
-The {{ .CompanyName }} Team
+{{ end }}

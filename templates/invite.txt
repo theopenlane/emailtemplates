@@ -1,3 +1,6 @@
+{{ template "base.txt" . }}
+
+{{ define "content" }}
 Join your team on {{ .CompanyName }}
 
 {{ .InviterName }} has invited you to use {{ .CompanyName }} with them, in an Organization called {{ .OrganizationName }} with role of {{ .Role }}
@@ -5,9 +8,4 @@ Join your team on {{ .CompanyName }}
 Accept the invitation by clicking this link.
 
 {{ .URLS.Invite }}
-
-If you have any questions, please contact {{ .SupportEmail }}
-
-Thank you,
-
- The {{ .CompanyName }} Team
+{{ end }}
