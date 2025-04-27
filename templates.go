@@ -15,6 +15,7 @@ const (
 	passwordResetSuccessSubject = "%s Password Reset Confirmation"
 	inviteAcceptedSubject       = "You've been added to an Organization on %s"
 	subscribedSubject           = "You've been subscribed to %s"
+	verifyBillingSubject        = "Please verify the billing email for %s to ensure your account stays up to date"
 )
 
 // Config includes fields that are common to all the email builders that are configurable
@@ -33,7 +34,7 @@ type Config struct {
 	LogoURL string `koanf:"logoURL" json:"logoURL" default:""`
 	// URLS includes URLs that are used in the email templates
 	URLS URLConfig `koanf:"urls" json:"urls"`
-
+	// TemplatesPath is the path to the email templates
 	TemplatesPath string `koanf:"templatesPath" json:"templatesPath"`
 }
 
@@ -53,6 +54,8 @@ type URLConfig struct {
 	PasswordReset string `koanf:"reset" json:"reset" default:""`
 	// VerifySubscriber is the URL to verify a subscriber for an organization
 	VerifySubscriber string `koanf:"verifySubscriber" json:"verifySubscriber" default:""`
+	// VerifyBilling is the URL to verify a billing account
+	VerifyBilling string `koanf:"verifyBilling" json:"verifyBilling" default:""`
 }
 
 // EmailData includes data fields that are common to all the email builders
@@ -77,7 +80,6 @@ type Recipient struct {
 // WelcomeData includes fields for the welcome email
 type WelcomeData struct {
 	EmailData
-
 	// Organization is the name of the organization that the user is joining
 	Organization string `json:"organization"`
 }
@@ -90,7 +92,13 @@ type VerifyEmailData struct {
 // SubscriberEmailData includes fields for the subscriber email
 type SubscriberEmailData struct {
 	EmailData
+	// Organization is the name of the organization that the user is subscribing to
+	OrganizationName string `json:"organization_name"`
+}
 
+// VerifyBillingEmailData includes fields for the verify billing email
+type VerifyBillingEmailData struct {
+	EmailData
 	// Organization is the name of the organization that the user is subscribing to
 	OrganizationName string `json:"organization_name"`
 }
@@ -98,7 +106,6 @@ type SubscriberEmailData struct {
 // InviteData includes fields for the invite email
 type InviteData struct {
 	EmailData
-
 	// InviterName is the name of the person who is inviting the recipient
 	InviterName string `json:"inviter_name"`
 	// OrganizationName is the name of the organization that the user is being invited to
@@ -227,6 +234,18 @@ func subscribe(data SubscriberEmailData) (*newman.EmailMessage, error) {
 	}
 
 	data.Subject = fmt.Sprintf(subscribedSubject, data.CompanyName)
+
+	return data.Build(text, html)
+}
+
+// verifyBilling creates a new email to verify a billing account
+func verifyBilling(data VerifyBillingEmailData) (*newman.EmailMessage, error) {
+	text, html, err := Render("verify_billing", data)
+	if err != nil {
+		return nil, err
+	}
+
+	data.Subject = fmt.Sprintf(verifyBillingSubject, data.CompanyName)
 
 	return data.Build(text, html)
 }

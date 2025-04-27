@@ -180,6 +180,27 @@ func TestPasswordResetSuccess(t *testing.T) {
 	assert.Equal(t, "Test Company Password Reset Confirmation", email.Subject)
 }
 
+func TestVerifyBillingEmail(t *testing.T) {
+	data := VerifyBillingEmailData{
+		EmailData: EmailData{
+			Subject: "VerifyBilling",
+			Recipient: Recipient{
+				Email: "test@example.com",
+			},
+			Config: Config{
+				CompanyName: "Test Company",
+			},
+		},
+		OrganizationName: "Test Org",
+	}
+
+	email, err := verifyBilling(data)
+	require.NoError(t, err)
+	require.NotNil(t, email)
+
+	assert.Equal(t, "Please verify the billing email for Test Company to ensure your account stays up to date", email.Subject)
+}
+
 func TestSubscribe(t *testing.T) {
 	data := SubscriberEmailData{
 		EmailData: EmailData{

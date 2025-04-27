@@ -71,6 +71,7 @@ of the Openlane platform.
 | Subscriber Verification | `.URLS.VerifySubscriber` | `https://theopenlane.io/verify`                 |
 | Password Reset          | `.URLS.PasswordReset`    | `https://console.theopenlane.io/password-reset` |
 | Invite Acceptance       | `.URLS.Invite`           | `https://console.theopenlane.io/invite`         |
+| Verify Billing Email    | `.URLS.VerifyBilling`    | `https://console.theopenlane.io/verify-billing` |
 
 ### Optional Variables
 

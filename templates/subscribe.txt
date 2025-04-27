@@ -5,4 +5,4 @@ Thank you for subscribing to {{ .OrganizationName }} - in order to confirm the s
 If you are having trouble verifying your email address, please contact us at {{ .SupportEmail }}.
 
 Thank you,
-The The {{ .CompanyName }} Team
+The {{ .CompanyName }} Team
