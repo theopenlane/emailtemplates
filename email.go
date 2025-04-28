@@ -177,3 +177,26 @@ func addTokenToURL(baseURL, token string) (string, error) {
 
 	return url.String(), nil
 }
+
+// NewVerifyBillingEmail returns a new email message based on the config values and the provided recipient and token
+func (c Config) NewVerifyBillingEmail(r Recipient, token string) (*newman.EmailMessage, error) {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return nil, err
+	}
+
+	data := VerifyBillingEmailData{
+		EmailData: EmailData{
+			Config:    c,
+			Recipient: r,
+		},
+	}
+
+	var err error
+
+	data.URLS.VerifyBilling, err = addTokenToURL(c.URLS.VerifyBilling, token)
+	if err != nil {
+		return nil, err
+	}
+
+	return verifyBilling(data)
+}
