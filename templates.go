@@ -26,6 +26,8 @@ type Config struct {
 	CompanyAddress string `koanf:"companyAddress" json:"companyAddress" default:""`
 	// Corporation is the official corporation name that is sending the email, included in the footer
 	Corporation string `koanf:"corporation" json:"corporation" default:""`
+	// Year is the year that the email is being sent, included in the footer for the copyright year
+	Year int `koanf:"year" json:"year" default:""`
 	// FromEmail is the email address that the email is sent from
 	FromEmail string `koanf:"fromEmail" json:"fromEmail" default:""`
 	// SupportEmail is the email address that the recipient can contact for support
@@ -34,8 +36,8 @@ type Config struct {
 	LogoURL string `koanf:"logoURL" json:"logoURL" default:""`
 	// URLS includes URLs that are used in the email templates
 	URLS URLConfig `koanf:"urls" json:"urls"`
-	// TemplatesPath is the path to the email templates
-	TemplatesPath string `koanf:"templatesPath" json:"templatesPath"`
+	// TemplatesPath is the path to the email templates to override the default templates
+	TemplatesPath string `koanf:"templatesPath" json:"templatesPath" default:""`
 }
 
 // URLConfig includes urls that are used in the email templates
@@ -80,8 +82,6 @@ type Recipient struct {
 // WelcomeData includes fields for the welcome email
 type WelcomeData struct {
 	EmailData
-	// Organization is the name of the organization that the user is joining
-	Organization string `json:"organization"`
 }
 
 // VerifyEmailData includes fields for the verify email
@@ -124,7 +124,7 @@ type ResetSuccessData struct {
 	EmailData
 }
 
-// Build valids and creates a new email from pre-rendered templates
+// Build validates and creates a new email from pre-rendered templates
 func (e EmailData) Build(text, html string) (*newman.EmailMessage, error) {
 	if err := e.Validate(); err != nil {
 		return nil, err

@@ -7,83 +7,20 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
-	"text/template"
+	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 var (
 	ErrInvalidSenderEmail = errors.New("please provide a valid sender email ( from email )")
 	templateLoadOnce      sync.Once
-	templateLoadErr       error
 )
-
-// ensureCustomTemplatesLoaded ensures templates are loaded only once
-// Also this makes sure if we have a custom template path, we should load them
-func ensureCustomTemplatesLoaded(templatePath string) error {
-	templateLoadOnce.Do(func() {
-		if templatePath != defaultTemplatesDir && templatePath != "" {
-			templateFiles, err := os.ReadDir(templatePath)
-			if err != nil {
-				templateLoadErr = fmt.Errorf("could not read template files from %q: %w", templatePath, err)
-				return
-			}
-
-			for _, file := range templateFiles {
-				if file.IsDir() {
-					continue
-				}
-
-				pattern := filepath.Join(templatePath, file.Name())
-
-				tmpl, err := template.New(file.Name()).
-					Funcs(fm).
-					ParseFiles(pattern)
-
-				if err != nil {
-					templateLoadErr = fmt.Errorf("could not parse template %q: %w", file.Name(), err)
-					return
-				}
-
-				templates[file.Name()] = tmpl
-			}
-		}
-	})
-
-	return templateLoadErr
-}
-
-// validate checks if all required fields are set and valid
-func (c *Config) validate() error {
-	if c.TemplatesPath != defaultTemplatesDir && c.TemplatesPath != "" {
-		if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
-			return err
-		}
-	}
-
-	if c.CompanyAddress == "" {
-		return newMissingRequiredFieldError("company address")
-	}
-
-	if c.CompanyName == "" {
-		return newMissingRequiredFieldError("company name")
-	}
-
-	if c.FromEmail == "" {
-		return newMissingRequiredFieldError("sender email")
-	}
-
-	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
-		return ErrInvalidSenderEmail
-	}
-
-	return nil
-}
 
 // New is a function that creates a new config for the email templates
 func New(options ...Option) (*Config, error) {
-	// initialize the resendEmailSender
-	c := &Config{
-		TemplatesPath: defaultTemplatesDir,
-	}
+	// initialize the email config
+	c := &Config{}
 
 	// apply the options
 	for _, option := range options {
@@ -95,6 +32,13 @@ func New(options ...Option) (*Config, error) {
 	}
 
 	return c, nil
+}
+
+// Validate the config and ensures that all required fields are set
+// and that the templates are loaded correctly
+// This function is called when the config is created outside the New function
+func (c *Config) Validate() error {
+	return c.validate()
 }
 
 // Option is a function that sets a field on an EmailMessage
@@ -205,4 +149,128 @@ func WithTemplatesPath(p string) Option {
 	return func(c *Config) {
 		c.TemplatesPath = p
 	}
+}
+
+func (c *Config) ensureDefaults() error {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return err
+	}
+
+	c.ensureCopyrightDate()
+
+	return nil
+}
+
+// ensureCustomTemplatesLoaded ensures templates are loaded only once
+// Also this makes sure if we have a custom template path, we should load them
+// this will include the partials directory as well if it exists
+func ensureCustomTemplatesLoaded(templatePath string) (err error) {
+	templateLoadOnce.Do(func() {
+		partials, err = getPartials(templatePath)
+		if err != nil {
+			log.Fatal().Err(err).Msgf("could not load partials from %q", templatePath)
+			return
+		}
+
+		err = loadTemplatesFromDir(templatePath, partials)
+		if err != nil {
+			log.Fatal().Err(err).Msgf("could not load templates from %q", templatePath)
+			return
+		}
+	})
+
+	return
+}
+
+// ensureCopyrightDate sets the default copyright date to the current year if not set
+func (c *Config) ensureCopyrightDate() {
+	// set default values
+	if c.Year == 0 {
+		c.Year = time.Now().Year()
+	}
+}
+
+// getPartials loads partials from the specified directory
+func getPartials(path string) ([]string, error) {
+	partials := []string{}
+
+	templateFiles, err := os.ReadDir(path)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, file := range templateFiles {
+		if file.Name() == defaultPartialsDir {
+			partialPath := filepath.Join(path, file.Name())
+			if err := loadTemplatesFromDir(partialPath, partials); err != nil {
+				return nil, err
+			}
+
+			templateFiles, err := os.ReadDir(partialPath)
+			if err != nil {
+				return nil, fmt.Errorf("could not read template files from %q: %w", path, err)
+			}
+
+			for _, file := range templateFiles {
+				if file.IsDir() {
+					continue
+				}
+
+				partials = append(partials, filepath.Join(defaultPartialsDir, file.Name()))
+			}
+		}
+	}
+
+	return partials, nil
+}
+
+// loadTemplatesFromDir loads templates from the specified directory
+// and recursively loads partials
+func loadTemplatesFromDir(path string, partials []string) error {
+	templateFiles, err := os.ReadDir(path)
+	if err != nil {
+		return fmt.Errorf("could not read template files from %q: %w", path, err)
+	}
+
+	for _, file := range templateFiles {
+		if file.IsDir() {
+			continue
+		}
+
+		key := file.Name()
+
+		templates[key], err = parseCustomTemplate(file, path, partials)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// validate checks if all required fields are set and valid
+func (c *Config) validate() error {
+	if c.TemplatesPath != "" {
+		if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+			return err
+		}
+	}
+
+	if c.CompanyAddress == "" {
+		return newMissingRequiredFieldError("company address")
+	}
+
+	if c.CompanyName == "" {
+		return newMissingRequiredFieldError("company name")
+	}
+
+	if c.FromEmail == "" {
+		return newMissingRequiredFieldError("sender email")
+	}
+
+	if _, err := mail.ParseAddress(c.FromEmail); err != nil {
+		return ErrInvalidSenderEmail
+	}
+
+	return nil
 }

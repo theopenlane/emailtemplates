@@ -1,3 +1,6 @@
+{{ template "base.txt" . }}
+
+{{ define "content" }}
 Hello {{ .Recipient.FirstName | ToUpper }},
 
 Welcome to the {{ .CompanyName }} platform - you can now log in to your account at {{ .URLS.Product }}.
@@ -8,7 +11,4 @@ We've created a personal Organization just for you to help you get started - you
 {{- if .URLS.Docs }}
 Check out the starter guide {{ .URLS.Docs }}/getting-started for more information, or our examples {{ .URLS.Docs }}/examples for ideas and inspiration.
 {{- end }}
-
-If you have any questions, please reach out to us at {{ .SupportEmail }}.
-
-The {{ .CompanyName }} Team
+{{ end }}

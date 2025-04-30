@@ -8,7 +8,7 @@ import (
 
 // NewVerifyEmail returns a new email message based on the config values and the provided recipient and token
 func (c Config) NewVerifyEmail(r Recipient, token string) (*newman.EmailMessage, error) {
-	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+	if err := c.ensureDefaults(); err != nil {
 		return nil, err
 	}
 
@@ -30,8 +30,8 @@ func (c Config) NewVerifyEmail(r Recipient, token string) (*newman.EmailMessage,
 }
 
 // NewWelcomeEmail returns a new email message based on the config values and the provided recipient and organization name
-func (c Config) NewWelcomeEmail(r Recipient, org string) (*newman.EmailMessage, error) {
-	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+func (c Config) NewWelcomeEmail(r Recipient) (*newman.EmailMessage, error) {
+	if err := c.ensureDefaults(); err != nil {
 		return nil, err
 	}
 
@@ -40,7 +40,6 @@ func (c Config) NewWelcomeEmail(r Recipient, org string) (*newman.EmailMessage, 
 			Config:    c,
 			Recipient: r,
 		},
-		Organization: org,
 	}
 
 	return welcome(data)
@@ -55,7 +54,7 @@ type InviteTemplateData struct {
 
 // NewInviteEmail returns a new email message based on the config values and the provided recipient and invite data
 func (c Config) NewInviteEmail(r Recipient, i InviteTemplateData, token string) (*newman.EmailMessage, error) {
-	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+	if err := c.ensureDefaults(); err != nil {
 		return nil, err
 	}
 
@@ -75,7 +74,7 @@ func (c Config) NewInviteEmail(r Recipient, i InviteTemplateData, token string) 
 
 // NewInviteEmail returns a new email message based on the config values and the provided recipient and invite data
 func (c Config) NewInviteAcceptedEmail(r Recipient, i InviteTemplateData) (*newman.EmailMessage, error) {
-	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+	if err := c.ensureDefaults(); err != nil {
 		return nil, err
 	}
 
@@ -101,7 +100,7 @@ func (c Config) newInvite(r Recipient, i InviteTemplateData) InviteData {
 
 // NewPasswordResetRequestEmail returns a new email message based on the config values and the provided recipient and token
 func (c Config) NewPasswordResetRequestEmail(r Recipient, token string) (*newman.EmailMessage, error) {
-	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+	if err := c.ensureDefaults(); err != nil {
 		return nil, err
 	}
 
@@ -124,7 +123,7 @@ func (c Config) NewPasswordResetRequestEmail(r Recipient, token string) (*newman
 
 // NewPasswordResetSuccessEmail returns  a new email message based on the config values and the provided recipient
 func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage, error) {
-	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+	if err := c.ensureDefaults(); err != nil {
 		return nil, err
 	}
 
@@ -140,7 +139,7 @@ func (c Config) NewPasswordResetSuccessEmail(r Recipient) (*newman.EmailMessage,
 
 // NewSubscriberEmail returns a new email message based on the config values and the provided recipient, organization name, and token
 func (c Config) NewSubscriberEmail(r Recipient, organizationName, token string) (*newman.EmailMessage, error) {
-	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+	if err := c.ensureDefaults(); err != nil {
 		return nil, err
 	}
 
@@ -180,7 +179,7 @@ func addTokenToURL(baseURL, token string) (string, error) {
 
 // NewVerifyBillingEmail returns a new email message based on the config values and the provided recipient and token
 func (c Config) NewVerifyBillingEmail(r Recipient, token string) (*newman.EmailMessage, error) {
-	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+	if err := c.ensureDefaults(); err != nil {
 		return nil, err
 	}
 
