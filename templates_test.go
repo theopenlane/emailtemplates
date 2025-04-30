@@ -88,7 +88,6 @@ func TestWelcome(t *testing.T) {
 				CompanyName: "Test Company",
 			},
 		},
-		Organization: "Test Org",
 	}
 
 	email, err := welcome(data)

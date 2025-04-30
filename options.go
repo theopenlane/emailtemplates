@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"time"
 
 	"github.com/rs/zerolog/log"
 )
@@ -150,6 +151,16 @@ func WithTemplatesPath(p string) Option {
 	}
 }
 
+func (c *Config) ensureDefaults() error {
+	if err := ensureCustomTemplatesLoaded(c.TemplatesPath); err != nil {
+		return err
+	}
+
+	c.ensureCopyrightDate()
+
+	return nil
+}
+
 // ensureCustomTemplatesLoaded ensures templates are loaded only once
 // Also this makes sure if we have a custom template path, we should load them
 // this will include the partials directory as well if it exists
@@ -171,6 +182,15 @@ func ensureCustomTemplatesLoaded(templatePath string) (err error) {
 	return
 }
 
+// ensureCopyrightDate sets the default copyright date to the current year if not set
+func (c *Config) ensureCopyrightDate() {
+	// set default values
+	if c.Year == 0 {
+		c.Year = time.Now().Year()
+	}
+}
+
+// getPartials loads partials from the specified directory
 func getPartials(path string) ([]string, error) {
 	partials := []string{}
 

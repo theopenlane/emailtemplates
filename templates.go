@@ -2,7 +2,6 @@ package emailtemplates
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/theopenlane/newman"
 )
@@ -83,8 +82,6 @@ type Recipient struct {
 // WelcomeData includes fields for the welcome email
 type WelcomeData struct {
 	EmailData
-	// Organization is the name of the organization that the user is joining
-	Organization string `json:"organization"`
 }
 
 // VerifyEmailData includes fields for the verify email
@@ -127,8 +124,8 @@ type ResetSuccessData struct {
 	EmailData
 }
 
-// Build valids and creates a new email from pre-rendered templates
-func (e EmailData) Build(text, html string) (*newman.EmailMessage, error) {
+// Build validates and creates a new email from pre-rendered templates
+func (e *EmailData) Build(text, html string) (*newman.EmailMessage, error) {
 	if err := e.Validate(); err != nil {
 		return nil, err
 	}
@@ -146,17 +143,12 @@ func (e EmailData) Build(text, html string) (*newman.EmailMessage, error) {
 }
 
 // Validate that all required data is present to assemble a sendable email
-func (e EmailData) Validate() error {
+func (e *EmailData) Validate() error {
 	switch {
 	case e.Subject == "":
 		return newMissingRequiredFieldError("subject")
 	case e.Recipient.Email == "":
 		return newMissingRequiredFieldError("email")
-	}
-
-	// set default values
-	if e.Year == 0 {
-		e.Year = time.Now().Year()
 	}
 
 	return nil
