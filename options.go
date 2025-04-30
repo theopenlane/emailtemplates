@@ -238,7 +238,6 @@ func loadTemplatesFromDir(path string, partials []string) error {
 		}
 
 		key := file.Name()
-		// path := filepath.Join(path, key)
 
 		templates[key], err = parseCustomTemplate(file, path, partials)
 		if err != nil {

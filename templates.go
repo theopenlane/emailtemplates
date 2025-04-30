@@ -125,7 +125,7 @@ type ResetSuccessData struct {
 }
 
 // Build validates and creates a new email from pre-rendered templates
-func (e *EmailData) Build(text, html string) (*newman.EmailMessage, error) {
+func (e EmailData) Build(text, html string) (*newman.EmailMessage, error) {
 	if err := e.Validate(); err != nil {
 		return nil, err
 	}
@@ -143,7 +143,7 @@ func (e *EmailData) Build(text, html string) (*newman.EmailMessage, error) {
 }
 
 // Validate that all required data is present to assemble a sendable email
-func (e *EmailData) Validate() error {
+func (e EmailData) Validate() error {
 	switch {
 	case e.Subject == "":
 		return newMissingRequiredFieldError("subject")

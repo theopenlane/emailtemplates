@@ -76,7 +76,7 @@ func parseTemplate(name string) *template.Template {
 	return tmpl
 }
 
-// loadTemplate loads a template from the file system
+// parseCustomTemplate loads a template from the file system
 func parseCustomTemplate(file os.DirEntry, path string, partials []string) (*template.Template, error) {
 	customFiles := []string{filepath.Join(path, file.Name())}
 
