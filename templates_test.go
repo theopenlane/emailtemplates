@@ -235,7 +235,7 @@ func TestWelcomeWithNew(t *testing.T) {
 		Email: "test@example.com",
 	}
 
-	email, err := cfg.NewWelcomeEmail(r, "Test Org")
+	email, err := cfg.NewWelcomeEmail(r)
 	require.NoError(t, err)
 	require.NotNil(t, email)
 
@@ -284,7 +284,7 @@ func TestWelcomeWithNewDefaultTemplate(t *testing.T) {
 		Email: "test@example.com",
 	}
 
-	email, err := cfg.NewWelcomeEmail(r, "Test Org")
+	email, err := cfg.NewWelcomeEmail(r)
 	require.NoError(t, err)
 	require.NotNil(t, email)
 }
