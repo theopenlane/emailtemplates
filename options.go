@@ -166,16 +166,17 @@ func (c *Config) ensureDefaults() error {
 // this will include the partials directory as well if it exists
 func ensureCustomTemplatesLoaded(templatePath string) (err error) {
 	templateLoadOnce.Do(func() {
-		partials, err = getPartials(templatePath)
-		if err != nil {
-			log.Fatal().Err(err).Msgf("could not load partials from %q", templatePath)
-			return
-		}
+		if templatePath != defaultTemplatesDir && templatePath != "" {
+			partials, err = getPartials(templatePath)
+			if err != nil {
+				log.Info().Err(err).Msgf("could not load partials from %q, skipping", templatePath)
+			}
 
-		err = loadTemplatesFromDir(templatePath, partials)
-		if err != nil {
-			log.Fatal().Err(err).Msgf("could not load templates from %q", templatePath)
-			return
+			err = loadTemplatesFromDir(templatePath, partials)
+			if err != nil {
+				log.Fatal().Err(err).Msgf("could not load templates from %q", templatePath)
+				return
+			}
 		}
 	})
 
