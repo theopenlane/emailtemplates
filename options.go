@@ -169,7 +169,8 @@ func ensureCustomTemplatesLoaded(templatePath string) (err error) {
 		if templatePath != defaultTemplatesDir && templatePath != "" {
 			partials, err = getPartials(templatePath)
 			if err != nil {
-				log.Info().Err(err).Msgf("could not load partials from %q, skipping", templatePath)
+				log.Fatal().Err(err).Msgf("could not load partials from %q, skipping", templatePath)
+				return
 			}
 
 			err = loadTemplatesFromDir(templatePath, partials)
