@@ -175,7 +175,7 @@ func ensureCustomTemplatesLoaded(templatePath string) (err error) {
 
 			err = loadTemplatesFromDir(templatePath, partials)
 			if err != nil {
-				log.Fatal().Err(err).Msgf("could not load templates from %q", templatePath)
+				log.Error().Err(err).Msgf("could not load templates from %q", templatePath)
 				return
 			}
 		}
