@@ -29,9 +29,9 @@ type Config struct {
 	// Year is the year that the email is being sent, included in the footer for the copyright year
 	Year int `koanf:"year" json:"year" default:""`
 	// FromEmail is the email address that the email is sent from
-	FromEmail string `koanf:"fromEmail" json:"fromEmail" default:""`
+	FromEmail string `koanf:"fromEmail" json:"fromEmail" default:"" domain:"inherit" domainPrefix:"no-reply@mail"`
 	// SupportEmail is the email address that the recipient can contact for support
-	SupportEmail string `koanf:"supportEmail" json:"supportEmail" default:""`
+	SupportEmail string `koanf:"supportEmail" json:"supportEmail" default:"" domain:"inherit" domainPrefix:"support@"`
 	// LogoURL is the URL to the company logo that is included in the email if provided
 	LogoURL string `koanf:"logoURL" json:"logoURL" default:""`
 	// URLS includes URLs that are used in the email templates
@@ -43,21 +43,21 @@ type Config struct {
 // URLConfig includes urls that are used in the email templates
 type URLConfig struct {
 	// Root is the root domain for the email
-	Root string `koanf:"root" json:"root" default:""`
+	Root string `koanf:"root" json:"root" default:"" domain:"inherit" domainPrefix:"https://www"`
 	// Product is the product domain for the email, usually the main UI where a user logs in
-	Product string `koanf:"product" json:"product" default:""`
+	Product string `koanf:"product" json:"product" default:"" domain:"inherit" domainPrefix:"https://console"`
 	// Docs is the docs domain for the email, where a user can find documentation
-	Docs string `koanf:"docs" json:"docs" default:""`
+	Docs string `koanf:"docs" json:"docs" default:"" domain:"inherit" domainPrefix:"https://docs"`
 	// Verify is the URL to verify an email address
-	Verify string `koanf:"verify" json:"verify" default:""`
+	Verify string `koanf:"verify" json:"verify" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/verify"`
 	// Invite is the URL to accept an invite to an organization
-	Invite string `koanf:"invite" json:"invite" default:""`
+	Invite string `koanf:"invite" json:"invite" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/invite"`
 	// PasswordReset is the URL to reset a password
-	PasswordReset string `koanf:"reset" json:"reset" default:""`
+	PasswordReset string `koanf:"reset" json:"reset" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/password-reset"`
 	// VerifySubscriber is the URL to verify a subscriber for an organization
-	VerifySubscriber string `koanf:"verifySubscriber" json:"verifySubscriber" default:""`
+	VerifySubscriber string `koanf:"verifySubscriber" json:"verifySubscriber" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/subscriber-verify"`
 	// VerifyBilling is the URL to verify a billing account
-	VerifyBilling string `koanf:"verifyBilling" json:"verifyBilling" default:""`
+	VerifyBilling string `koanf:"verifyBilling" json:"verifyBilling" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/verify-billing"`
 }
 
 // EmailData includes data fields that are common to all the email builders
