@@ -9,7 +9,7 @@ steps:
         key: "lint"
         cancel_on_build_failing: true
         plugins:
-          - docker#v5.12.0:
+          - docker#v5.13.0:
               image: "ghcr.io/theopenlane/build-image:latest"
               always-pull: true
               command: ["task", "go:lint"]
@@ -19,7 +19,7 @@ steps:
         key: "go_test"
         cancel_on_build_failing: true
         plugins:
-          - docker#v5.12.0:
+          - docker#v5.13.0:
               image: "ghcr.io/theopenlane/build-image:latest"
               always-pull: true
               command: ["task", "go:test:cover"]
@@ -37,7 +37,7 @@ steps:
           - artifacts#v1.9.4:
               download: "coverage.out"
               step: "go_test"
-          - docker#v5.12.0:
+          - docker#v5.13.0:
               image: "sonarsource/sonar-scanner-cli:11.3"
               environment:
                 - "SONAR_TOKEN"
@@ -54,7 +54,7 @@ steps:
           - artifacts#v1.9.4:
               download: coverage.out
               step: "go_test"
-          - docker#v5.12.0:
+          - docker#v5.13.0:
               image: "sonarsource/sonar-scanner-cli:11.3"
               environment:
                 - "SONAR_TOKEN"
