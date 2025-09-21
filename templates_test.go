@@ -311,3 +311,28 @@ func TestInviteWithNewDefaultTemplate(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, email)
 }
+
+// TestTrustCenterNDARequest tests the creation of trust center NDA request emails
+func TestTrustCenterNDARequest(t *testing.T) {
+	cfg, err := New(
+		WithCompanyName("Test Company"),
+		WithCompanyAddress("123 Test St"),
+		WithFromEmail("test@example.com"),
+	)
+	require.NoError(t, err)
+
+	r := Recipient{
+		Email: "test@example.com",
+	}
+	token := "abc123"
+	emailData := TrustCenterNDARequestData{
+		OrganizationName: "Test Org",
+		TrustCenterURL:   "https://trust.example.com/nda-request",
+	}
+
+	email, err := cfg.NewTrustCenterNDARequestEmail(r, token, emailData)
+
+	require.NoError(t, err)
+	require.NotNil(t, email)
+	assert.Equal(t, "Test Org Trust Center NDA Request", email.Subject)
+}

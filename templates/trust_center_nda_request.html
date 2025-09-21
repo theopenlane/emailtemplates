@@ -1,0 +1,31 @@
+{{/*
+Trust Center NDA Request Email Template (HTML)
+This template generates an HTML email requesting the recipient to sign an NDA
+to gain access to the organization's trust center resources.
+
+Template variables:
+- .CompanyName: Name of the company/organization
+- .TrustCenterNDAURL: Tokenized URL for signing the NDA
+*/}}
+{{ template "base.html" . }}
+
+{{ define "title" }}You have requested access to {{ .CompanyName }}'s Trust Center{{ end }}
+
+{{ define "content" }}
+<div class="header">
+  <h1>You have requested access to {{ .CompanyName }}'s Trust Center</h1>
+</div>
+
+<div class="content">
+  <p>Please Click on the button below to sign the NDA to access the Trust Center</p>
+
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center" class="button">
+        <a rel="noopener" target="_blank" href="{{ .TrustCenterNDAURL }}">Sign NDA</a>
+      </td>
+    </tr>
+  </table>
+
+</div>
+{{ end }}
