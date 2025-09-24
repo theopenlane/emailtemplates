@@ -8,14 +8,15 @@ import (
 
 // Email subject lines
 const (
-	welcomeSubject              = "Welcome to %s!"
-	verifyEmailSubject          = "Please verify your email address to login to %s"
-	inviteSubject               = "Join Your Teammate %s on %s!"
-	passwordResetRequestSubject = "%s Password Reset - Action Required"
-	passwordResetSuccessSubject = "%s Password Reset Confirmation"
-	inviteAcceptedSubject       = "You've been added to an Organization on %s"
-	subscribedSubject           = "You've been subscribed to %s"
-	verifyBillingSubject        = "Please verify the billing email for %s to ensure your account stays up to date"
+	welcomeSubject               = "Welcome to %s!"
+	verifyEmailSubject           = "Please verify your email address to login to %s"
+	inviteSubject                = "Join Your Teammate %s on %s!"
+	passwordResetRequestSubject  = "%s Password Reset - Action Required"
+	passwordResetSuccessSubject  = "%s Password Reset Confirmation"
+	inviteAcceptedSubject        = "You've been added to an Organization on %s"
+	subscribedSubject            = "You've been subscribed to %s"
+	verifyBillingSubject         = "Please verify the billing email for %s to ensure your account stays up to date"
+	trustCenterNDARequestSubject = "%s Trust Center NDA Request"
 )
 
 // Config includes fields that are common to all the email builders that are configurable
@@ -122,6 +123,15 @@ type ResetRequestData struct {
 // ResetSuccessData includes fields for the password reset success email
 type ResetSuccessData struct {
 	EmailData
+}
+
+// TrustCenterNDARequestEmailData includes fields for the trust center NDA request email
+type TrustCenterNDARequestEmailData struct {
+	EmailData
+	// OrganizationName is the name of the organization requesting the NDA signature
+	OrganizationName string `json:"organization_name"`
+	// TrustCenterNDAURL is the URL where the recipient can sign the NDA to access the trust center
+	TrustCenterNDAURL string `json:"trust_center_nda_url"`
 }
 
 // Build validates and creates a new email from pre-rendered templates
@@ -246,6 +256,18 @@ func verifyBilling(data VerifyBillingEmailData) (*newman.EmailMessage, error) {
 	}
 
 	data.Subject = fmt.Sprintf(verifyBillingSubject, data.CompanyName)
+
+	return data.Build(text, html)
+}
+
+// trustCenterNDARequest creates a new email to request an NDA for the trust center
+func trustCenterNDARequest(data TrustCenterNDARequestEmailData) (*newman.EmailMessage, error) {
+	text, html, err := Render("trust_center_nda_request", data)
+	if err != nil {
+		return nil, err
+	}
+
+	data.Subject = fmt.Sprintf(trustCenterNDARequestSubject, data.OrganizationName)
 
 	return data.Build(text, html)
 }

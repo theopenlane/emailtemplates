@@ -199,3 +199,35 @@ func (c Config) NewVerifyBillingEmail(r Recipient, token string) (*newman.EmailM
 
 	return verifyBilling(data)
 }
+
+// TrustCenterNDARequestData contains the data needed to create a trust center NDA request email
+type TrustCenterNDARequestData struct {
+	// OrganizationName is the name of the organization requesting the NDA signature
+	OrganizationName string
+	// TrustCenterURL is the base URL for the trust center NDA signing page (token will be appended)
+	TrustCenterURL string
+}
+
+// NewTrustCenterNDARequestEmail creates a new email message for requesting an NDA signature to access the trust center.
+// It takes a recipient, a security token, and trust center NDA request data, then generates an email
+// with a tokenized URL that allows the recipient to sign the NDA and gain access to protected trust center resources.
+func (c Config) NewTrustCenterNDARequestEmail(r Recipient, token string, data TrustCenterNDARequestData) (*newman.EmailMessage, error) {
+	if err := c.ensureDefaults(); err != nil {
+		return nil, err
+	}
+
+	var err error
+	emailData := TrustCenterNDARequestEmailData{
+		EmailData: EmailData{
+			Config:    c,
+			Recipient: r,
+		},
+		OrganizationName: data.OrganizationName,
+	}
+
+	emailData.TrustCenterNDAURL, err = addTokenToURL(data.TrustCenterURL, token)
+	if err != nil {
+		return nil, err
+	}
+	return trustCenterNDARequest(emailData)
+}
