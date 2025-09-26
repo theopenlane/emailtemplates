@@ -1,0 +1,37 @@
+{{/*
+Trust Center Auth Link Email Template (HTML)
+This template generates an HTML email with an authentication link
+to allow direct access to the organization's trust center resources.
+
+Template variables:
+- .CompanyName: Name of the company/organization
+- .OrganizationName: Name of the organization requesting access
+- .TrustCenterAuthURL: Tokenized URL for authenticating to the trust center
+*/}}
+{{ template "base.html" . }}
+
+{{ define "title" }}Access {{ .OrganizationName }}'s Trust Center{{ end }}
+
+{{ define "content" }}
+<div class="header">
+  <h1>Access {{ .OrganizationName }}'s Trust Center</h1>
+</div>
+
+<div class="content">
+  {{- if .LogoURL }}
+  <img src="{{ .LogoURL }}" alt="{{ .CompanyName }}" style="width: 100px; height: auto;" />
+  {{- end }}
+
+  <p>You have been granted access to {{ .OrganizationName }}'s Trust Center. Click the button below to authenticate and view the available resources.</p>
+
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center" class="button">
+        <a rel="noopener" target="_blank" href="{{ .TrustCenterAuthURL }}">Access Trust Center</a>
+      </td>
+    </tr>
+  </table>
+
+  <p>This authentication link will allow you to securely access the trust center resources. For your security, this link will expire after a limited time.</p>
+</div>
+{{ end }}

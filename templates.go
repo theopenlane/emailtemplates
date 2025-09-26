@@ -17,6 +17,7 @@ const (
 	subscribedSubject            = "You've been subscribed to %s"
 	verifyBillingSubject         = "Please verify the billing email for %s to ensure your account stays up to date"
 	trustCenterNDARequestSubject = "%s Trust Center NDA Request"
+	trustCenterAuthSubject       = "Access %s's Trust Center"
 )
 
 // Config includes fields that are common to all the email builders that are configurable
@@ -132,6 +133,15 @@ type TrustCenterNDARequestEmailData struct {
 	OrganizationName string `json:"organization_name"`
 	// TrustCenterNDAURL is the URL where the recipient can sign the NDA to access the trust center
 	TrustCenterNDAURL string `json:"trust_center_nda_url"`
+}
+
+// TrustCenterAuthEmailData includes fields for the trust center auth link email
+type TrustCenterAuthEmailData struct {
+	EmailData
+	// OrganizationName is the name of the organization granting access
+	OrganizationName string `json:"organization_name"`
+	// TrustCenterAuthURL is the URL where the recipient can authenticate to access the trust center
+	TrustCenterAuthURL string `json:"trust_center_auth_url"`
 }
 
 // Build validates and creates a new email from pre-rendered templates
@@ -268,6 +278,18 @@ func trustCenterNDARequest(data TrustCenterNDARequestEmailData) (*newman.EmailMe
 	}
 
 	data.Subject = fmt.Sprintf(trustCenterNDARequestSubject, data.OrganizationName)
+
+	return data.Build(text, html)
+}
+
+// trustCenterAuth creates a new email with an auth link for the trust center
+func trustCenterAuth(data TrustCenterAuthEmailData) (*newman.EmailMessage, error) {
+	text, html, err := Render("trust_center_auth", data)
+	if err != nil {
+		return nil, err
+	}
+
+	data.Subject = fmt.Sprintf(trustCenterAuthSubject, data.OrganizationName)
 
 	return data.Build(text, html)
 }
