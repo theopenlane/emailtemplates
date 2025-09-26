@@ -336,3 +336,28 @@ func TestTrustCenterNDARequest(t *testing.T) {
 	require.NotNil(t, email)
 	assert.Equal(t, "Test Org Trust Center NDA Request", email.Subject)
 }
+
+// TestTrustCenterAuth tests the creation of trust center auth link emails
+func TestTrustCenterAuth(t *testing.T) {
+	cfg, err := New(
+		WithCompanyName("Test Company"),
+		WithCompanyAddress("123 Test St"),
+		WithFromEmail("test@example.com"),
+	)
+	require.NoError(t, err)
+
+	r := Recipient{
+		Email: "test@example.com",
+	}
+	token := "xyz789"
+	emailData := TrustCenterAuthData{
+		OrganizationName: "Test Org",
+		TrustCenterURL:   "https://trust.example.com/auth",
+	}
+
+	email, err := cfg.NewTrustCenterAuthEmail(r, token, emailData)
+
+	require.NoError(t, err)
+	require.NotNil(t, email)
+	assert.Equal(t, "Access Test Org's Trust Center", email.Subject)
+}

@@ -208,6 +208,14 @@ type TrustCenterNDARequestData struct {
 	TrustCenterURL string
 }
 
+// TrustCenterAuthData contains the data needed to create a trust center auth link email
+type TrustCenterAuthData struct {
+	// OrganizationName is the name of the organization granting access
+	OrganizationName string
+	// TrustCenterURL is the base URL for the trust center authentication page (token will be appended)
+	TrustCenterURL string
+}
+
 // NewTrustCenterNDARequestEmail creates a new email message for requesting an NDA signature to access the trust center.
 // It takes a recipient, a security token, and trust center NDA request data, then generates an email
 // with a tokenized URL that allows the recipient to sign the NDA and gain access to protected trust center resources.
@@ -230,4 +238,28 @@ func (c Config) NewTrustCenterNDARequestEmail(r Recipient, token string, data Tr
 		return nil, err
 	}
 	return trustCenterNDARequest(emailData)
+}
+
+// NewTrustCenterAuthEmail creates a new email message with an authentication link to access the trust center.
+// It takes a recipient, a security token, and trust center auth data, then generates an email
+// with a tokenized URL that allows the recipient to authenticate and access trust center resources directly.
+func (c Config) NewTrustCenterAuthEmail(r Recipient, token string, data TrustCenterAuthData) (*newman.EmailMessage, error) {
+	if err := c.ensureDefaults(); err != nil {
+		return nil, err
+	}
+
+	var err error
+	emailData := TrustCenterAuthEmailData{
+		EmailData: EmailData{
+			Config:    c,
+			Recipient: r,
+		},
+		OrganizationName: data.OrganizationName,
+	}
+
+	emailData.TrustCenterAuthURL, err = addTokenToURL(data.TrustCenterURL, token)
+	if err != nil {
+		return nil, err
+	}
+	return trustCenterAuth(emailData)
 }
