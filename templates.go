@@ -61,6 +61,8 @@ type URLConfig struct {
 	VerifySubscriber string `koanf:"verifySubscriber" json:"verifySubscriber" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/subscriber-verify"`
 	// VerifyBilling is the URL to verify a billing account
 	VerifyBilling string `koanf:"verifyBilling" json:"verifyBilling" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/verify-billing"`
+	// Questionnaire is the URL to access a questionnaire
+	Questionnaire string `koanf:"questionnaire" json:"questionnaire" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/questionnaire"`
 }
 
 // EmailData includes data fields that are common to all the email builders

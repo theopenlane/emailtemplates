@@ -222,8 +222,6 @@ type QuestionnaireAuthData struct {
 	CompanyName string
 	// AssessmentName is the name of the assessment/questionnaire
 	AssessmentName string
-	// QuestionnaireURL is the base URL for the questionnaire authentication page (token will be appended)
-	QuestionnaireURL string
 }
 
 // NewTrustCenterNDARequestEmail creates a new email message for requesting an NDA signature to access the trust center.
@@ -282,7 +280,6 @@ func (c Config) NewQuestionnaireAuthEmail(r Recipient, token string, data Questi
 		return nil, err
 	}
 
-	var err error
 	emailData := QuestionnaireAuthEmailData{
 		EmailData: EmailData{
 			Config:    c,
@@ -292,9 +289,12 @@ func (c Config) NewQuestionnaireAuthEmail(r Recipient, token string, data Questi
 		AssessmentName: data.AssessmentName,
 	}
 
-	emailData.QuestionnaireAuthURL, err = addTokenToURL(data.QuestionnaireURL, token)
+	var err error
+
+	emailData.QuestionnaireAuthURL, err = addTokenToURL(c.URLS.Questionnaire, token)
 	if err != nil {
 		return nil, err
 	}
+
 	return questionnaireAuth(emailData)
 }
