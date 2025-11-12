@@ -18,6 +18,7 @@ const (
 	verifyBillingSubject         = "Please verify the billing email for %s to ensure your account stays up to date"
 	trustCenterNDARequestSubject = "%s Trust Center NDA Request"
 	trustCenterAuthSubject       = "Access %s's Trust Center"
+	questionnaireAuthSubject     = "Access %s Questionnaire from %s"
 )
 
 // Config includes fields that are common to all the email builders that are configurable
@@ -142,6 +143,17 @@ type TrustCenterAuthEmailData struct {
 	OrganizationName string `json:"organization_name"`
 	// TrustCenterAuthURL is the URL where the recipient can authenticate to access the trust center
 	TrustCenterAuthURL string `json:"trust_center_auth_url"`
+}
+
+// QuestionnaireAuthEmailData includes fields for the questionnaire auth link email
+type QuestionnaireAuthEmailData struct {
+	EmailData
+	// CompanyName is the name of the company sending the assessment
+	CompanyName string `json:"company_name"`
+	// AssessmentName is the name of the assessment/questionnaire
+	AssessmentName string `json:"assessment_name"`
+	// QuestionnaireAuthURL is the URL where the recipient can authenticate to access the questionnaire
+	QuestionnaireAuthURL string `json:"questionnaire_auth_url"`
 }
 
 // Build validates and creates a new email from pre-rendered templates
@@ -290,6 +302,18 @@ func trustCenterAuth(data TrustCenterAuthEmailData) (*newman.EmailMessage, error
 	}
 
 	data.Subject = fmt.Sprintf(trustCenterAuthSubject, data.OrganizationName)
+
+	return data.Build(text, html)
+}
+
+// questionnaireAuth creates a new email with an auth link for the questionnaire
+func questionnaireAuth(data QuestionnaireAuthEmailData) (*newman.EmailMessage, error) {
+	text, html, err := Render("questionnaire_auth", data)
+	if err != nil {
+		return nil, err
+	}
+
+	data.Subject = fmt.Sprintf(questionnaireAuthSubject, data.AssessmentName, data.CompanyName)
 
 	return data.Build(text, html)
 }

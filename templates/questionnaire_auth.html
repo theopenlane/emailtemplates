@@ -1,0 +1,29 @@
+{{ template "base.html" . }}
+
+{{ define "title" }}{{ .CompanyName }} sent you an assessment to submit{{ end }}
+
+{{ define "content" }}
+<div class="header">
+  <h1>{{ .CompanyName }} sent you an assessment to fill ( <strong>{{ .AssessmentName }}</strong>)</h1>
+</div>
+
+<div class="content">
+  {{- if .LogoURL }}
+  <img src="{{ .LogoURL }}" alt="{{ .CompanyName }}" style="width: 100px; height: auto;" />
+  {{- end }}
+
+  <p>You have been requested to submit a response to an assessment/questionnaire by {{ .CompanyName }}. 
+    Click the button below to view and fill in the requested form.</p>
+
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center" class="button">
+        <a rel="noopener" target="_blank" href="{{ .QuestionnaireAuthURL }}">Access Questionnaire</a>
+      </td>
+    </tr>
+  </table>
+
+  <p>This authentication link will allow you to securely access the questionnaire. For your security, this link will expire after a limited time.</p>
+</div>
+{{ end }}
+
