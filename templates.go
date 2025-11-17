@@ -24,23 +24,23 @@ const (
 // Config includes fields that are common to all the email builders that are configurable
 type Config struct {
 	// CompanyName is the name of the company that is sending the email
-	CompanyName string `koanf:"companyName" json:"companyName" default:""`
+	CompanyName string `koanf:"companyname" json:"companyname" default:""`
 	// CompanyAddress is the address of the company that is sending the email, included in the footer
-	CompanyAddress string `koanf:"companyAddress" json:"companyAddress" default:""`
+	CompanyAddress string `koanf:"companyaddress" json:"companyaddress" default:""`
 	// Corporation is the official corporation name that is sending the email, included in the footer
 	Corporation string `koanf:"corporation" json:"corporation" default:""`
 	// Year is the year that the email is being sent, included in the footer for the copyright year
 	Year int `koanf:"year" json:"year" default:""`
 	// FromEmail is the email address that the email is sent from
-	FromEmail string `koanf:"fromEmail" json:"fromEmail" default:"" domain:"inherit" domainPrefix:"no-reply@mail"`
+	FromEmail string `koanf:"fromemail" json:"fromemail" default:"" domain:"inherit" domainPrefix:"no-reply@mail"`
 	// SupportEmail is the email address that the recipient can contact for support
-	SupportEmail string `koanf:"supportEmail" json:"supportEmail" default:"" domain:"inherit" domainPrefix:"support@"`
+	SupportEmail string `koanf:"supportemail" json:"supportemail" default:"" domain:"inherit" domainPrefix:"support@"`
 	// LogoURL is the URL to the company logo that is included in the email if provided
-	LogoURL string `koanf:"logoURL" json:"logoURL" default:""`
+	LogoURL string `koanf:"logourl" json:"logourl" default:""`
 	// URLS includes URLs that are used in the email templates
 	URLS URLConfig `koanf:"urls" json:"urls"`
 	// TemplatesPath is the path to the email templates to override the default templates
-	TemplatesPath string `koanf:"templatesPath" json:"templatesPath" default:""`
+	TemplatesPath string `koanf:"templatespath" json:"templatespath" default:""`
 }
 
 // URLConfig includes urls that are used in the email templates
@@ -58,9 +58,9 @@ type URLConfig struct {
 	// PasswordReset is the URL to reset a password
 	PasswordReset string `koanf:"reset" json:"reset" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/password-reset"`
 	// VerifySubscriber is the URL to verify a subscriber for an organization
-	VerifySubscriber string `koanf:"verifySubscriber" json:"verifySubscriber" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/subscriber-verify"`
+	VerifySubscriber string `koanf:"verifysubscriber" json:"verifysubscriber" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/subscriber-verify"`
 	// VerifyBilling is the URL to verify a billing account
-	VerifyBilling string `koanf:"verifyBilling" json:"verifyBilling" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/verify-billing"`
+	VerifyBilling string `koanf:"verifybilling" json:"verifybilling" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/verify-billing"`
 	// Questionnaire is the URL to access a questionnaire
 	Questionnaire string `koanf:"questionnaire" json:"questionnaire" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/questionnaire"`
 }
