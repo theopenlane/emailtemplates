@@ -1,0 +1,13 @@
+{{ template "base.txt" . }}
+
+{{ define "content" }}
+You have been requested to submit a response to an assessment/questionnaire by {{ .CompanyName }}.
+
+Click on the link below to view and fill in the requested form:
+
+{{ .QuestionnaireAuthURL }}
+
+This authentication link will allow you to securely access the questionnaire. For your security, this link will expire after a limited time.
+
+{{ end }}
+

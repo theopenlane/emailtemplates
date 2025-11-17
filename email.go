@@ -216,6 +216,14 @@ type TrustCenterAuthData struct {
 	TrustCenterURL string
 }
 
+// QuestionnaireAuthData contains the data needed to create a questionnaire auth link email
+type QuestionnaireAuthData struct {
+	// CompanyName is the name of the company sending the assessment
+	CompanyName string
+	// AssessmentName is the name of the assessment/questionnaire
+	AssessmentName string
+}
+
 // NewTrustCenterNDARequestEmail creates a new email message for requesting an NDA signature to access the trust center.
 // It takes a recipient, a security token, and trust center NDA request data, then generates an email
 // with a tokenized URL that allows the recipient to sign the NDA and gain access to protected trust center resources.
@@ -262,4 +270,31 @@ func (c Config) NewTrustCenterAuthEmail(r Recipient, token string, data TrustCen
 		return nil, err
 	}
 	return trustCenterAuth(emailData)
+}
+
+// NewQuestionnaireAuthEmail creates a new email message with an authentication link to access a questionnaire.
+// It takes a recipient, a security token, and questionnaire auth data, then generates an email
+// with a tokenized URL that allows the recipient to authenticate and access the questionnaire directly.
+func (c Config) NewQuestionnaireAuthEmail(r Recipient, token string, data QuestionnaireAuthData) (*newman.EmailMessage, error) {
+	if err := c.ensureDefaults(); err != nil {
+		return nil, err
+	}
+
+	emailData := QuestionnaireAuthEmailData{
+		EmailData: EmailData{
+			Config:    c,
+			Recipient: r,
+		},
+		CompanyName:    data.CompanyName,
+		AssessmentName: data.AssessmentName,
+	}
+
+	var err error
+
+	emailData.QuestionnaireAuthURL, err = addTokenToURL(c.URLS.Questionnaire, token)
+	if err != nil {
+		return nil, err
+	}
+
+	return questionnaireAuth(emailData)
 }
