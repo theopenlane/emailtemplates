@@ -289,6 +289,11 @@ func (c Config) NewQuestionnaireAuthEmail(r Recipient, token string, data Questi
 		AssessmentName: data.AssessmentName,
 	}
 
+	if c.QuestionnaireEmail != "" {
+		emailData.FromEmail = c.QuestionnaireEmail
+	}
+
+
 	var err error
 
 	emailData.QuestionnaireAuthURL, err = addTokenToURL(c.URLS.Questionnaire, token)

@@ -35,6 +35,9 @@ type Config struct {
 	FromEmail string `koanf:"fromemail" json:"fromemail" default:"" domain:"inherit" domainPrefix:"no-reply@mail"`
 	// SupportEmail is the email address that the recipient can contact for support
 	SupportEmail string `koanf:"supportemail" json:"supportemail" default:"" domain:"inherit" domainPrefix:"support@"`
+	// QuestionnaireEmail is the email address for questionnaire/assessment related emails.
+	// If not provided, the FromEmail will be used as before
+	QuestionnaireEmail string `koanf:"questionnaireemail" json:"questionnaireemail" default:"" domain:"inherit" domainPrefix:"questionnaire@"`
 	// LogoURL is the URL to the company logo that is included in the email if provided
 	LogoURL string `koanf:"logourl" json:"logourl" default:""`
 	// URLS includes URLs that are used in the email templates
