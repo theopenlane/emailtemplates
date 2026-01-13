@@ -7,6 +7,7 @@ This email is to confirm that the billing email for {{ .OrganizationName }} has 
 
 Previous email: {{ .OldEmail }}
 New email: {{ .NewEmail }}
+Time of action: {{ .ChangedAt.Format "January 2, 2006 at 3:04 PM MST" }}
 
 If you made this change, no further action is required.
 

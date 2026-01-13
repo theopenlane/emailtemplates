@@ -15,7 +15,8 @@
 
   <p>
     <strong>Previous email:</strong> {{ .OldEmail }}<br />
-    <strong>New email:</strong> {{ .NewEmail }}
+    <strong>New email:</strong> {{ .NewEmail }}<br />
+    <strong>Time of action:</strong> {{ .ChangedAt.Format "January 2, 2006 at 3:04 PM MST" }}
   </p>
 
   <p>If you made this change, no further action is required.</p>

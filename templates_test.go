@@ -3,6 +3,7 @@ package emailtemplates
 import (
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -376,6 +377,7 @@ func TestBillingEmailChanged(t *testing.T) {
 		OrganizationName: "Test Org",
 		OldEmail:         "old@example.com",
 		NewEmail:         "new@example.com",
+		ChangedAt:        time.Now(),
 	}
 
 	email, err := billingEmailChanged(data)
@@ -400,6 +402,7 @@ func TestNewBillingEmailChangedEmail(t *testing.T) {
 		OrganizationName: "Test Org",
 		OldEmail:         "old-billing@example.com",
 		NewEmail:         "new-billing@example.com",
+		ChangedAt:        time.Now(),
 	}
 
 	email, err := cfg.NewBillingEmailChangedEmail(r, emailData)

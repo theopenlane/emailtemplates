@@ -2,6 +2,7 @@ package emailtemplates
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/theopenlane/newman"
 )
@@ -171,6 +172,8 @@ type BillingEmailChangedData struct {
 	OldEmail string `json:"old_email"`
 	// NewEmail is the new billing email address
 	NewEmail string `json:"new_email"`
+	// ChangedAt is the time the email change action was taken
+	ChangedAt time.Time `json:"changed_at"`
 }
 
 // Build validates and creates a new email from pre-rendered templates

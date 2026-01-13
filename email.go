@@ -2,6 +2,7 @@ package emailtemplates
 
 import (
 	"net/url"
+	"time"
 
 	"github.com/theopenlane/newman"
 )
@@ -308,6 +309,7 @@ type BillingEmailChangedTemplateData struct {
 	OrganizationName string
 	OldEmail         string
 	NewEmail         string
+	ChangedAt        time.Time
 }
 
 // NewBillingEmailChangedEmail creates a new email message that is meant to notify orgs
@@ -325,6 +327,7 @@ func (c Config) NewBillingEmailChangedEmail(r Recipient, data BillingEmailChange
 		OrganizationName: data.OrganizationName,
 		OldEmail:         data.OldEmail,
 		NewEmail:         data.NewEmail,
+		ChangedAt:        data.ChangedAt,
 	}
 
 	return billingEmailChanged(emailData)
