@@ -2,6 +2,7 @@ package emailtemplates
 
 import (
 	"net/url"
+	"time"
 
 	"github.com/theopenlane/newman"
 )
@@ -293,7 +294,6 @@ func (c Config) NewQuestionnaireAuthEmail(r Recipient, token string, data Questi
 		emailData.FromEmail = c.QuestionnaireEmail
 	}
 
-
 	var err error
 
 	emailData.QuestionnaireAuthURL, err = addTokenToURL(c.URLS.Questionnaire, token)
@@ -302,4 +302,33 @@ func (c Config) NewQuestionnaireAuthEmail(r Recipient, token string, data Questi
 	}
 
 	return questionnaireAuth(emailData)
+}
+
+// BillingEmailChangedTemplateData includes the data needed to render the billing email templates
+type BillingEmailChangedTemplateData struct {
+	OrganizationName string
+	OldEmail         string
+	NewEmail         string
+	ChangedAt        time.Time
+}
+
+// NewBillingEmailChangedEmail creates a new email message that is meant to notify orgs
+// about changes to their billing email.
+func (c Config) NewBillingEmailChangedEmail(r Recipient, data BillingEmailChangedTemplateData) (*newman.EmailMessage, error) {
+	if err := c.ensureDefaults(); err != nil {
+		return nil, err
+	}
+
+	emailData := BillingEmailChangedData{
+		EmailData: EmailData{
+			Config:    c,
+			Recipient: r,
+		},
+		OrganizationName: data.OrganizationName,
+		OldEmail:         data.OldEmail,
+		NewEmail:         data.NewEmail,
+		ChangedAt:        data.ChangedAt,
+	}
+
+	return billingEmailChanged(emailData)
 }

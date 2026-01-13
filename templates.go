@@ -2,6 +2,7 @@ package emailtemplates
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/theopenlane/newman"
 )
@@ -19,6 +20,7 @@ const (
 	trustCenterNDARequestSubject = "%s Trust Center NDA Request"
 	trustCenterAuthSubject       = "Access %s's Trust Center"
 	questionnaireAuthSubject     = "Access %s Questionnaire from %s"
+	billingEmailChangedSubject   = "Billing Email Changed for %s"
 )
 
 // Config includes fields that are common to all the email builders that are configurable
@@ -159,6 +161,19 @@ type QuestionnaireAuthEmailData struct {
 	AssessmentName string `json:"assessment_name"`
 	// QuestionnaireAuthURL is the URL where the recipient can authenticate to access the questionnaire
 	QuestionnaireAuthURL string `json:"questionnaire_auth_url"`
+}
+
+// BillingEmailChangedData includes fields for the billing email changed notification
+type BillingEmailChangedData struct {
+	EmailData
+	// OrganizationName is the name of the organization whose billing email was changed
+	OrganizationName string `json:"organization_name"`
+	// OldEmail is the previous billing email address
+	OldEmail string `json:"old_email"`
+	// NewEmail is the new billing email address
+	NewEmail string `json:"new_email"`
+	// ChangedAt is the time the email change action was taken
+	ChangedAt time.Time `json:"changed_at"`
 }
 
 // Build validates and creates a new email from pre-rendered templates
@@ -320,5 +335,16 @@ func questionnaireAuth(data QuestionnaireAuthEmailData) (*newman.EmailMessage, e
 
 	data.Subject = fmt.Sprintf(questionnaireAuthSubject, data.AssessmentName, data.CompanyName)
 
+	return data.Build(text, html)
+}
+
+// billingEmailChanged creates a new email to notify about a billing email change
+func billingEmailChanged(data BillingEmailChangedData) (*newman.EmailMessage, error) {
+	text, html, err := Render("billing_email_changed", data)
+	if err != nil {
+		return nil, err
+	}
+
+	data.Subject = fmt.Sprintf(billingEmailChangedSubject, data.OrganizationName)
 	return data.Build(text, html)
 }

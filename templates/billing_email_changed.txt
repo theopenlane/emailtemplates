@@ -1,0 +1,15 @@
+{{ template "base.txt" . }}
+
+{{ define "content" }}
+Hello,
+
+This email is to confirm that the billing email for {{ .OrganizationName }} has been changed.
+
+Previous email: {{ .OldEmail }}
+New email: {{ .NewEmail }}
+Time of action: {{ .ChangedAt.Format "January 2, 2006 at 3:04 PM MST" }}
+
+If you made this change, no further action is required.
+
+If you did not make this change, please contact our support team immediately at {{ .SupportEmail }}.
+{{ end }}

@@ -1,0 +1,30 @@
+{{ template "base.html" . }}
+
+{{ define "title" }}Billing Email Changed{{ end }}
+{{ define "preheader" }}The billing email for {{ .OrganizationName }} has been changed{{ end }}
+
+{{ define "content" }}
+<div class="content">
+  {{- if .LogoURL }}
+  <img src="{{ .LogoURL }}" alt="{{ .CompanyName }}" style="width: 100px; height: auto;" />
+  {{- end }}
+
+  <p>Hello,</p>
+
+  <p>This email is to confirm that the billing email for {{ .OrganizationName }} has been changed.</p>
+
+  <p>
+    <strong>Previous email:</strong> {{ .OldEmail }}<br />
+    <strong>New email:</strong> {{ .NewEmail }}<br />
+    <strong>Time of action:</strong> {{ .ChangedAt.Format "January 2, 2006 at 3:04 PM MST" }}
+  </p>
+
+  <p>If you made this change, no further action is required.</p>
+
+  <p>If you did not make this change, please contact our support team immediately at
+    <a href="mailto:{{ .SupportEmail }}">{{ .SupportEmail }}</a>.
+  </p>
+
+  <p><br />The {{ .CompanyName }} Team<br /></p>
+</div>
+{{ end }}

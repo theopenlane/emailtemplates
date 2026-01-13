@@ -3,6 +3,7 @@ package emailtemplates
 import (
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -360,4 +361,53 @@ func TestTrustCenterAuth(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, email)
 	assert.Equal(t, "Access Test Org's Trust Center", email.Subject)
+}
+
+func TestBillingEmailChanged(t *testing.T) {
+	data := BillingEmailChangedData{
+		EmailData: EmailData{
+			Subject: "Billing Email Changed",
+			Recipient: Recipient{
+				Email: "test@example.com",
+			},
+			Config: Config{
+				CompanyName: "Test Company",
+			},
+		},
+		OrganizationName: "Test Org",
+		OldEmail:         "old@example.com",
+		NewEmail:         "new@example.com",
+		ChangedAt:        time.Now(),
+	}
+
+	email, err := billingEmailChanged(data)
+	require.NoError(t, err)
+	require.NotNil(t, email)
+
+	assert.Equal(t, "Billing Email Changed for Test Org", email.Subject)
+}
+
+func TestNewBillingEmailChangedEmail(t *testing.T) {
+	cfg, err := New(
+		WithCompanyName("Test Company"),
+		WithCompanyAddress("123 Test St"),
+		WithFromEmail("test@example.com"),
+	)
+	require.NoError(t, err)
+
+	r := Recipient{
+		Email: "test@example.com",
+	}
+	emailData := BillingEmailChangedTemplateData{
+		OrganizationName: "Test Org",
+		OldEmail:         "old-billing@example.com",
+		NewEmail:         "new-billing@example.com",
+		ChangedAt:        time.Now(),
+	}
+
+	email, err := cfg.NewBillingEmailChangedEmail(r, emailData)
+
+	require.NoError(t, err)
+	require.NotNil(t, email)
+	assert.Equal(t, "Billing Email Changed for Test Org", email.Subject)
 }
