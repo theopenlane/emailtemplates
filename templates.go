@@ -165,9 +165,12 @@ type QuestionnaireAuthEmailData struct {
 // BillingEmailChangedData includes fields for the billing email changed notification
 type BillingEmailChangedData struct {
 	EmailData
+	// OrganizationName is the name of the organization whose billing email was changed
 	OrganizationName string `json:"organization_name"`
-	OldEmail         string `json:"old_email"`
-	NewEmail         string `json:"new_email"`
+	// OldEmail is the previous billing email address
+	OldEmail string `json:"old_email"`
+	// NewEmail is the new billing email address
+	NewEmail string `json:"new_email"`
 }
 
 // Build validates and creates a new email from pre-rendered templates
