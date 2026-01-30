@@ -4,15 +4,17 @@ This template generates a plain text email requesting the recipient to sign an N
 to gain access to the organization's trust center resources.
 
 Template variables:
-- .CompanyName: Name of the company/organization
+- .OrganizationName: Name of the organization that owns the trust center
 - .TrustCenterNDAURL: Tokenized URL for signing the NDA
 */}}
-{{ template "base.txt" . }}
+{{ template "basetrustcenter.txt" . }}
 
-{{ define "content" }}
-You have requested access to {{ .CompanyName }}'s Trust Center.
+You requested access to {{ .OrganizationName }}’s Trust Center
 
-1. Click on the link to sign the NDA: {{ .TrustCenterNDAURL }}
-2. You will be redirected to a page where you can sign the NDA to gain access to the protected trust center resources.
+To continue, please review and sign the Non-Disclosure Agreement (NDA).
+Once signed, you’ll be granted access to protected Trust Center documents.
 
-{{ end }}
+Sign the NDA:
+{{ .TrustCenterNDAURL }}
+
+If you did not request access, you can safely ignore this email.
