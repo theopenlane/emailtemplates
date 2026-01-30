@@ -4,19 +4,21 @@ This template generates a plain text email with an authentication link
 to allow direct access to the organization's trust center resources.
 
 Template variables:
-- .CompanyName: Name of the company/organization
 - .OrganizationName: Name of the organization requesting access
 - .TrustCenterAuthURL: Tokenized URL for authenticating to the trust center
 */}}
-{{ template "base.txt" . }}
+{{ template "basetrustcenter.txt" . }}
 
 {{ define "content" }}
-You have been granted access to {{ .OrganizationName }}'s Trust Center.
+Access {{ .OrganizationName }}’s Trust Center
 
-Click on the link below to authenticate and view the available resources:
+You’ve been granted access to {{ .OrganizationName }}’s Trust Center.
+Use the link below to authenticate and view the available resources.
 
+Access the Trust Center:
 {{ .TrustCenterAuthURL }}
 
-This authentication link will allow you to securely access the trust center resources. For your security, this link will expire after a limited time.
+This authentication link provides secure, time-limited access and will expire after a short period for your security.
 
+If you did not expect this email, you can safely ignore it.
 {{ end }}

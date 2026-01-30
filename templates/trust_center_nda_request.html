@@ -4,28 +4,69 @@ This template generates an HTML email requesting the recipient to sign an NDA
 to gain access to the organization's trust center resources.
 
 Template variables:
-- .CompanyName: Name of the company/organization
+- .OrganizationName: Name of the organization that owns the trust center
 - .TrustCenterNDAURL: Tokenized URL for signing the NDA
 */}}
-{{ template "base.html" . }}
+{{ template "basetrustcenter.html" . }}
 
-{{ define "title" }}You have requested access to {{ .CompanyName }}'s Trust Center{{ end }}
+{{ define "title" }}You have requested access to {{ .OrganizationName }}'s Trust Center{{ end }}
 
 {{ define "content" }}
-<div class="header">
-  <h1>You have requested access to {{ .CompanyName }}'s Trust Center</h1>
-</div>
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4fafa; padding: 32px;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);">
 
-<div class="content">
-  <p>Please Click on the button below to sign the NDA to access the Trust Center</p>
+    <!-- Top accent -->
+    <div style="height: 6px; background: linear-gradient(90deg, #3fc2b4 0%, #2aaea1 100%);"></div>
 
-  <table border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td align="center" class="button">
-        <a rel="noopener" target="_blank" href="{{ .TrustCenterNDAURL }}">Sign NDA</a>
-      </td>
-    </tr>
-  </table>
+    <div style="padding: 32px 32px 24px;">
+      <!-- Header -->
+      <div style="margin-bottom: 18px;">
+        <h1 style="margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: #0f172a;">
+          You requested access to {{ .OrganizationName }}’s Trust Center
+        </h1>
+      </div>
 
+      <!-- Body -->
+      <div>
+        <p style="margin: 0 0 14px; font-size: 15px; line-height: 1.6; color: #334155;">
+          To continue, please review and sign the Non-Disclosure Agreement (NDA). Once signed, you’ll be granted access to protected Trust Center documents.
+        </p>
+
+        <!-- Button -->
+        <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin: 22px 0 18px;">
+          <tr>
+            <td align="left">
+              <a
+                href="{{ .TrustCenterNDAURL }}"
+                target="_blank"
+                rel="noopener"
+                style="
+                  display: inline-block;
+                  padding: 12px 20px;
+                  font-size: 15px;
+                  font-weight: 700;
+                  color: #ffffff;
+                  background-color: #3fc2b4;
+                  border-radius: 10px;
+                  text-decoration: none;
+                  box-shadow: 0 6px 14px rgba(63, 194, 180, 0.35);
+                "
+              >
+                Sign NDA
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #64748b;">
+          If the button doesn’t work, copy and paste this link into your browser:
+          <br />
+          <a href="{{ .TrustCenterNDAURL }}" target="_blank" rel="noopener" style="color: #3fc2b4; text-decoration: underline; word-break: break-all;">
+            {{ .TrustCenterNDAURL }}
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 {{ end }}
