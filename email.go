@@ -211,6 +211,33 @@ type TrustCenterNDARequestData struct {
 	TrustCenterNDAFullURL string
 }
 
+// TrustCenterNDASignedData contains the data needed to create a trust center NDA signed notification email
+type TrustCenterNDASignedData struct {
+	// OrganizationName is the name of the organization whose NDA was signed
+	OrganizationName string
+	// TrustCenterURL is the URL where the recipient can access the trust center
+	TrustCenterURL string
+}
+
+// NewTrustCenterNDASignedEmail creates a new email message notifying the recipient that their NDA has been signed
+// and they now have access to the organization's trust center resources.
+func (c Config) NewTrustCenterNDASignedEmail(r Recipient, data TrustCenterNDASignedData) (*newman.EmailMessage, error) {
+	if err := c.ensureDefaults(); err != nil {
+		return nil, err
+	}
+
+	emailData := TrustCenterNDASignedEmailData{
+		EmailData: EmailData{
+			Config:    c,
+			Recipient: r,
+		},
+		OrganizationName: data.OrganizationName,
+		TrustCenterURL:   data.TrustCenterURL,
+	}
+
+	return trustCenterNDASigned(emailData)
+}
+
 // TrustCenterAuthData contains the data needed to create a trust center auth link email
 type TrustCenterAuthData struct {
 	// OrganizationName is the name of the organization granting access

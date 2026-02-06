@@ -18,6 +18,7 @@ const (
 	subscribedSubject            = "You've been subscribed to %s"
 	verifyBillingSubject         = "Please verify the billing email for %s to ensure your account stays up to date"
 	trustCenterNDARequestSubject = "%s Trust Center NDA Request"
+	trustCenterNDASignedSubject  = "%s Trust Center NDA Signed"
 	trustCenterAuthSubject       = "Access %s's Trust Center"
 	questionnaireAuthSubject     = "Access %s Questionnaire from %s"
 	billingEmailChangedSubject   = "Billing Email Changed for %s"
@@ -141,6 +142,15 @@ type TrustCenterNDARequestEmailData struct {
 	OrganizationName string `json:"organization_name"`
 	// TrustCenterNDAURL is the URL where the recipient can sign the NDA to access the trust center
 	TrustCenterNDAURL string `json:"trust_center_nda_url"`
+}
+
+// TrustCenterNDASignedEmailData includes fields for the trust center NDA signed notification email
+type TrustCenterNDASignedEmailData struct {
+	EmailData
+	// OrganizationName is the name of the organization whose NDA was signed
+	OrganizationName string `json:"organization_name"`
+	// TrustCenterURL is the URL where the recipient can access the trust center
+	TrustCenterURL string `json:"trust_center_url"`
 }
 
 // TrustCenterAuthEmailData includes fields for the trust center auth link email
@@ -310,6 +320,18 @@ func trustCenterNDARequest(data TrustCenterNDARequestEmailData) (*newman.EmailMe
 	}
 
 	data.Subject = fmt.Sprintf(trustCenterNDARequestSubject, data.OrganizationName)
+
+	return data.Build(text, html)
+}
+
+// trustCenterNDASigned creates a new email to notify a user that their NDA has been signed
+func trustCenterNDASigned(data TrustCenterNDASignedEmailData) (*newman.EmailMessage, error) {
+	text, html, err := Render("trust_center_nda_signed", data)
+	if err != nil {
+		return nil, err
+	}
+
+	data.Subject = fmt.Sprintf(trustCenterNDASignedSubject, data.OrganizationName)
 
 	return data.Build(text, html)
 }
