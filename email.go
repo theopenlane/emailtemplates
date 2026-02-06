@@ -207,6 +207,8 @@ type TrustCenterNDARequestData struct {
 	OrganizationName string
 	// TrustCenterURL is the base URL for the trust center NDA signing page (token will be appended)
 	TrustCenterURL string
+	// TrustCenterNDAFullURL is the full URL for the trust center NDA signing page, if provided it will be used instead of TrustCenterURL with token appended
+	TrustCenterNDAFullURL string
 }
 
 // TrustCenterAuthData contains the data needed to create a trust center auth link email
@@ -215,6 +217,8 @@ type TrustCenterAuthData struct {
 	OrganizationName string
 	// TrustCenterURL is the base URL for the trust center authentication page (token will be appended)
 	TrustCenterURL string
+	// TrustCenterAuthFullURL is the full URL for the trust center authentication page, if provided it will be used instead of TrustCenterURL with token appended
+	TrustCenterAuthFullURL string
 }
 
 // QuestionnaireAuthData contains the data needed to create a questionnaire auth link email
@@ -242,10 +246,14 @@ func (c Config) NewTrustCenterNDARequestEmail(r Recipient, token string, data Tr
 		OrganizationName: data.OrganizationName,
 	}
 
-	emailData.TrustCenterNDAURL, err = addTokenToURL(data.TrustCenterURL, token)
-	if err != nil {
-		return nil, err
+	emailData.TrustCenterNDAURL = data.TrustCenterNDAFullURL
+	if emailData.TrustCenterNDAURL == "" {
+		emailData.TrustCenterNDAURL, err = addTokenToURL(data.TrustCenterURL, token)
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	return trustCenterNDARequest(emailData)
 }
 
@@ -266,10 +274,14 @@ func (c Config) NewTrustCenterAuthEmail(r Recipient, token string, data TrustCen
 		OrganizationName: data.OrganizationName,
 	}
 
-	emailData.TrustCenterAuthURL, err = addTokenToURL(data.TrustCenterURL, token)
-	if err != nil {
-		return nil, err
+	emailData.TrustCenterAuthURL = data.TrustCenterAuthFullURL
+	if emailData.TrustCenterAuthURL == "" {
+		emailData.TrustCenterAuthURL, err = addTokenToURL(data.TrustCenterURL, token)
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	return trustCenterAuth(emailData)
 }
 
