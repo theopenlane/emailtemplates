@@ -225,7 +225,6 @@ type TrustCenterNDASignedData struct {
 // and they now have access to the organization's trust center resources.
 // The attachment parameter is the signed NDA document to include as an email attachment.
 func (c Config) NewTrustCenterNDASignedEmail(r Recipient, data TrustCenterNDASignedData, attachment io.Reader, fileName string) (*newman.EmailMessage, error) {
-
 	if err := c.ensureDefaults(); err != nil {
 		return nil, err
 	}
@@ -236,7 +235,7 @@ func (c Config) NewTrustCenterNDASignedEmail(r Recipient, data TrustCenterNDASig
 	}
 
 	if fileName == "" {
-		return nil, errors.New("please provide an attachment file name")
+		return nil, errors.New("please provide an attachment file name") //nolint:err113
 	}
 
 	emailData := TrustCenterNDASignedEmailData{
@@ -285,6 +284,7 @@ func (c Config) NewTrustCenterNDARequestEmail(r Recipient, token string, data Tr
 	}
 
 	var err error
+
 	emailData := TrustCenterNDARequestEmailData{
 		EmailData: EmailData{
 			Config:    c,
@@ -313,6 +313,7 @@ func (c Config) NewTrustCenterAuthEmail(r Recipient, token string, data TrustCen
 	}
 
 	var err error
+
 	emailData := TrustCenterAuthEmailData{
 		EmailData: EmailData{
 			Config:    c,

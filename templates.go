@@ -368,5 +368,6 @@ func billingEmailChanged(data BillingEmailChangedData) (*newman.EmailMessage, er
 	}
 
 	data.Subject = fmt.Sprintf(billingEmailChangedSubject, data.OrganizationName)
+
 	return data.Build(text, html)
 }
