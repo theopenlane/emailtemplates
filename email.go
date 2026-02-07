@@ -1,6 +1,8 @@
 package emailtemplates
 
 import (
+	"errors"
+	"io"
 	"net/url"
 	"time"
 
@@ -221,9 +223,20 @@ type TrustCenterNDASignedData struct {
 
 // NewTrustCenterNDASignedEmail creates a new email message notifying the recipient that their NDA has been signed
 // and they now have access to the organization's trust center resources.
-func (c Config) NewTrustCenterNDASignedEmail(r Recipient, data TrustCenterNDASignedData) (*newman.EmailMessage, error) {
+// The attachment parameter is the signed NDA document to include as an email attachment.
+func (c Config) NewTrustCenterNDASignedEmail(r Recipient, data TrustCenterNDASignedData, attachment io.Reader, fileName string) (*newman.EmailMessage, error) {
+
 	if err := c.ensureDefaults(); err != nil {
 		return nil, err
+	}
+
+	content, err := io.ReadAll(attachment)
+	if err != nil {
+		return nil, err
+	}
+
+	if fileName == "" {
+		return nil, errors.New("please provide an attachment file name")
 	}
 
 	emailData := TrustCenterNDASignedEmailData{
@@ -235,7 +248,14 @@ func (c Config) NewTrustCenterNDASignedEmail(r Recipient, data TrustCenterNDASig
 		TrustCenterURL:   data.TrustCenterURL,
 	}
 
-	return trustCenterNDASigned(emailData)
+	msg, err := trustCenterNDASigned(emailData)
+	if err != nil {
+		return nil, err
+	}
+
+	msg.AddAttachment(newman.NewAttachment(fileName, content))
+
+	return msg, nil
 }
 
 // TrustCenterAuthData contains the data needed to create a trust center auth link email
