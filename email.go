@@ -1,7 +1,6 @@
 package emailtemplates
 
 import (
-	"errors"
 	"io"
 	"net/url"
 	"time"
