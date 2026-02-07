@@ -235,7 +235,7 @@ func (c Config) NewTrustCenterNDASignedEmail(r Recipient, data TrustCenterNDASig
 	}
 
 	if fileName == "" {
-		return nil, errors.New("please provide an attachment file name") //nolint:err113
+		return nil, newMissingRequiredFieldError("filename")
 	}
 
 	emailData := TrustCenterNDASignedEmailData{
