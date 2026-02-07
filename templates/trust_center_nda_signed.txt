@@ -1,0 +1,9 @@
+{{ template "basetrustcenter.txt" . }}
+
+Your NDA with {{ .OrganizationName }} has been signed
+
+Thank you for signing the Non-Disclosure Agreement (NDA).
+You now have access to {{ .OrganizationName }}'s protected Trust Center documents.
+
+Visit the Trust Center:
+{{ .TrustCenterURL }}

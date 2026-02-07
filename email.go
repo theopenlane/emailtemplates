@@ -1,6 +1,7 @@
 package emailtemplates
 
 import (
+	"io"
 	"net/url"
 	"time"
 
@@ -211,6 +212,50 @@ type TrustCenterNDARequestData struct {
 	TrustCenterNDAFullURL string
 }
 
+// TrustCenterNDASignedData contains the data needed to create a trust center NDA signed notification email
+type TrustCenterNDASignedData struct {
+	// OrganizationName is the name of the organization whose NDA was signed
+	OrganizationName string
+	// TrustCenterURL is the URL where the recipient can access the trust center
+	TrustCenterURL string
+}
+
+// NewTrustCenterNDASignedEmail creates a new email message notifying the recipient that their NDA has been signed
+// and they now have access to the organization's trust center resources.
+// The attachment parameter is the signed NDA document to include as an email attachment.
+func (c Config) NewTrustCenterNDASignedEmail(r Recipient, data TrustCenterNDASignedData, attachment io.Reader, fileName string) (*newman.EmailMessage, error) {
+	if err := c.ensureDefaults(); err != nil {
+		return nil, err
+	}
+
+	content, err := io.ReadAll(attachment)
+	if err != nil {
+		return nil, err
+	}
+
+	if fileName == "" {
+		return nil, newMissingRequiredFieldError("filename")
+	}
+
+	emailData := TrustCenterNDASignedEmailData{
+		EmailData: EmailData{
+			Config:    c,
+			Recipient: r,
+		},
+		OrganizationName: data.OrganizationName,
+		TrustCenterURL:   data.TrustCenterURL,
+	}
+
+	msg, err := trustCenterNDASigned(emailData)
+	if err != nil {
+		return nil, err
+	}
+
+	msg.AddAttachment(newman.NewAttachment(fileName, content))
+
+	return msg, nil
+}
+
 // TrustCenterAuthData contains the data needed to create a trust center auth link email
 type TrustCenterAuthData struct {
 	// OrganizationName is the name of the organization granting access
@@ -238,6 +283,7 @@ func (c Config) NewTrustCenterNDARequestEmail(r Recipient, token string, data Tr
 	}
 
 	var err error
+
 	emailData := TrustCenterNDARequestEmailData{
 		EmailData: EmailData{
 			Config:    c,
@@ -266,6 +312,7 @@ func (c Config) NewTrustCenterAuthEmail(r Recipient, token string, data TrustCen
 	}
 
 	var err error
+
 	emailData := TrustCenterAuthEmailData{
 		EmailData: EmailData{
 			Config:    c,
