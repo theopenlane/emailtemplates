@@ -1,13 +1,15 @@
-{{ template "base.txt" . }}
+{{ template "basequestionnaires.txt" . }}
 
 {{ define "content" }}
-You have been requested to submit a response to an assessment/questionnaire by {{ .CompanyName }}.
+{{ .CompanyName }} sent you an assessment to complete ({{ .AssessmentName }})
 
-Click on the link below to view and fill in the requested form:
+{{ .CompanyName }} has shared a form for you to complete.
+Use the link below to access the questionnaire.
 
+Access the Questionnaire:
 {{ .QuestionnaireAuthURL }}
 
-This authentication link will allow you to securely access the questionnaire. For your security, this link will expire after a limited time.
+This authentication link provides secure, time-limited access and will expire after a short period for your security.
 
+If you did not expect this email, you can safely ignore it.
 {{ end }}
-

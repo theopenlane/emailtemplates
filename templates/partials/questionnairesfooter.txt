@@ -1,0 +1,7 @@
+Need help?
+support@theopenlane.io
+
+Security inquiries:
+security@theopenlane.io
+
+© {{ .Year }} {{ .Corporation }} All rights reserved.
