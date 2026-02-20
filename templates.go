@@ -170,6 +170,8 @@ type QuestionnaireAuthEmailData struct {
 	// AssessmentName is the name of the assessment/questionnaire
 	AssessmentName string `json:"assessment_name"`
 	// QuestionnaireAuthURL is the URL where the recipient can authenticate to access the questionnaire
+	// this is useful for cases where we want to generate shortlinks or similar. if not provided,
+	// the default behavior which is to build up the url is retained
 	QuestionnaireAuthURL string `json:"questionnaire_auth_url"`
 }
 
