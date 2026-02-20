@@ -272,6 +272,8 @@ type QuestionnaireAuthData struct {
 	CompanyName string
 	// AssessmentName is the name of the assessment/questionnaire
 	AssessmentName string
+	// QuestionnaireAuthFullURL is the full URL for the questionnaire authentication page, if provided it will be used instead of the configured questionnaire URL with token appended
+	QuestionnaireAuthFullURL string
 }
 
 // NewTrustCenterNDARequestEmail creates a new email message for requesting an NDA signature to access the trust center.
@@ -353,11 +355,14 @@ func (c Config) NewQuestionnaireAuthEmail(r Recipient, token string, data Questi
 		emailData.FromEmail = c.QuestionnaireEmail
 	}
 
-	var err error
+	emailData.QuestionnaireAuthURL = data.QuestionnaireAuthFullURL
+	if emailData.QuestionnaireAuthURL == "" {
+		var err error
 
-	emailData.QuestionnaireAuthURL, err = addTokenToURL(c.URLS.Questionnaire, token)
-	if err != nil {
-		return nil, err
+		emailData.QuestionnaireAuthURL, err = addTokenToURL(c.URLS.Questionnaire, token)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return questionnaireAuth(emailData)
