@@ -69,7 +69,7 @@ type URLConfig struct {
 	// VerifyBilling is the URL to verify a billing account
 	VerifyBilling string `koanf:"verifybilling" json:"verifybilling" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/verify-billing"`
 	// Billing is the URL to access billing details
-	Billing string `koanf:"billing" json:"billing" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/settings/billing"`
+	Billing string `koanf:"billing" json:"billing" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/organization-settings/billing"`
 	// Questionnaire is the URL to access a questionnaire
 	Questionnaire string `koanf:"questionnaire" json:"questionnaire" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/questionnaire"`
 }
