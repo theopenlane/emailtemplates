@@ -135,6 +135,13 @@ func WithVerifyBillingURL(url string) Option {
 	}
 }
 
+// WithBillingURL sets the billing URL for the email
+func WithBillingURL(url string) Option {
+	return func(t *Config) {
+		t.URLS.Billing = url
+	}
+}
+
 // WithLogoURL sets the logo URL for the email, this field is optional and
 // omitted from the email if not provided
 func WithLogoURL(url string) Option {

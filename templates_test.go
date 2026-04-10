@@ -2,6 +2,7 @@ package emailtemplates
 
 import (
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -410,4 +411,32 @@ func TestNewBillingEmailChangedEmail(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, email)
 	assert.Equal(t, "Billing Email Changed for Test Org", email.Subject)
+}
+
+func TestNewOrgDeletionNoticeEmail(t *testing.T) {
+	cfg, err := New(
+		WithCompanyName("Test Company"),
+		WithCompanyAddress("123 Test St"),
+		WithFromEmail("test@example.com"),
+		WithBillingURL("https://example.com/settings/billing"),
+	)
+	require.NoError(t, err)
+
+	r := Recipient{
+		Email: "test@example.com",
+	}
+	emailData := OrgDeletionNoticeTemplateData{
+		OrganizationName: "Test Org",
+		Date:             time.Date(2026, time.April, 10, 12, 0, 0, 0, time.UTC),
+	}
+
+	email, err := cfg.NewOrgDeletionNoticeEmail(r, emailData)
+
+	require.NoError(t, err)
+	require.NotNil(t, email)
+	assert.Equal(t, "Organization Deletion Notice for Test Org", email.Subject)
+	assert.True(t, strings.Contains(email.HTML, "your organization Test Org"))
+	assert.True(t, strings.Contains(email.Text, "your organization Test Org"))
+	assert.True(t, strings.Contains(email.HTML, "https://example.com/settings/billing"))
+	assert.True(t, strings.Contains(email.Text, "https://example.com/settings/billing"))
 }

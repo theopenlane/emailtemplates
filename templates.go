@@ -22,6 +22,7 @@ const (
 	trustCenterAuthSubject       = "Access %s's Trust Center"
 	questionnaireAuthSubject     = "Access %s Questionnaire from %s"
 	billingEmailChangedSubject   = "Billing Email Changed for %s"
+	orgDeletionNoticeSubject     = "Organization Deletion Notice for %s"
 )
 
 // Config includes fields that are common to all the email builders that are configurable
@@ -67,6 +68,8 @@ type URLConfig struct {
 	VerifySubscriber string `koanf:"verifysubscriber" json:"verifysubscriber" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/subscriber-verify"`
 	// VerifyBilling is the URL to verify a billing account
 	VerifyBilling string `koanf:"verifybilling" json:"verifybilling" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/verify-billing"`
+	// Billing is the URL to access billing details
+	Billing string `koanf:"billing" json:"billing" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/settings/billing"`
 	// Questionnaire is the URL to access a questionnaire
 	Questionnaire string `koanf:"questionnaire" json:"questionnaire" default:"" domain:"inherit" domainPrefix:"https://console" domainSuffix:"/questionnaire"`
 }
@@ -186,6 +189,15 @@ type BillingEmailChangedData struct {
 	NewEmail string `json:"new_email"`
 	// ChangedAt is the time the email change action was taken
 	ChangedAt time.Time `json:"changed_at"`
+}
+
+// OrgDeletionNoticeData includes fields for the org deletion notice email
+type OrgDeletionNoticeData struct {
+	EmailData
+	// OrganizationName is the name of the organization being deleted
+	OrganizationName string `json:"organization_name"`
+	// Date is the date when the deletion will take effect
+	Date time.Time `json:"date"`
 }
 
 // Build validates and creates a new email from pre-rendered templates
@@ -370,6 +382,18 @@ func billingEmailChanged(data BillingEmailChangedData) (*newman.EmailMessage, er
 	}
 
 	data.Subject = fmt.Sprintf(billingEmailChangedSubject, data.OrganizationName)
+
+	return data.Build(text, html)
+}
+
+// orgDeletionNotice creates a new email to notify about an org deletion
+func orgDeletionNotice(data OrgDeletionNoticeData) (*newman.EmailMessage, error) {
+	text, html, err := Render("org_deletion_notice", data)
+	if err != nil {
+		return nil, err
+	}
+
+	data.Subject = fmt.Sprintf(orgDeletionNoticeSubject, data.OrganizationName)
 
 	return data.Build(text, html)
 }
