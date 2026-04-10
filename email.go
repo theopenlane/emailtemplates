@@ -396,3 +396,27 @@ func (c Config) NewBillingEmailChangedEmail(r Recipient, data BillingEmailChange
 
 	return billingEmailChanged(emailData)
 }
+
+// OrgDeletionNoticeTemplateData includes the data needed to render the org deletion notice templates
+type OrgDeletionNoticeTemplateData struct {
+	OrganizationName string
+	Date             time.Time
+}
+
+// NewOrgDeletionNoticeEmail creates a new email message to notify about an organization deletion.
+func (c Config) NewOrgDeletionNoticeEmail(r Recipient, data OrgDeletionNoticeTemplateData) (*newman.EmailMessage, error) {
+	if err := c.ensureDefaults(); err != nil {
+		return nil, err
+	}
+
+	emailData := OrgDeletionNoticeData{
+		EmailData: EmailData{
+			Config:    c,
+			Recipient: r,
+		},
+		OrganizationName: data.OrganizationName,
+		Date:             data.Date,
+	}
+
+	return orgDeletionNotice(emailData)
+}

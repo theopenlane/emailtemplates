@@ -93,9 +93,16 @@ func TestOptions(t *testing.T) {
 
 	t.Run("WithVerifyBillingURL", func(t *testing.T) {
 		cfg := &Config{}
-		opt := WithVerifySubscriberURL("https://example.com/verify-billing")
+		opt := WithVerifyBillingURL("https://example.com/verify-billing")
 		opt(cfg)
-		assert.Equal(t, "https://example.com/verify-billing", cfg.URLS.VerifySubscriber)
+		assert.Equal(t, "https://example.com/verify-billing", cfg.URLS.VerifyBilling)
+	})
+
+	t.Run("WithBillingURL", func(t *testing.T) {
+		cfg := &Config{}
+		opt := WithBillingURL("https://example.com/settings/billing")
+		opt(cfg)
+		assert.Equal(t, "https://example.com/settings/billing", cfg.URLS.Billing)
 	})
 
 	t.Run("WithLogoURL", func(t *testing.T) {

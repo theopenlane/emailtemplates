@@ -1,0 +1,16 @@
+{{ template "base.txt" . }}
+
+{{ define "content" }}
+Hello,
+
+This email is to notify you that your organization {{ .OrganizationName }} has been scheduled for deletion.
+
+Scheduled deletion date: {{ .Date.Format "January 2, 2006" }}
+
+{{- if .URLS.Billing }}
+If you want to keep your account from deletion before the aforementioned date, you need to add a payment method to your
+account : {{ .URLS.Billing }}
+{{- end }}
+
+If you believe this was done in error, please contact our support team immediately at {{ .SupportEmail }}.
+{{ end }}
